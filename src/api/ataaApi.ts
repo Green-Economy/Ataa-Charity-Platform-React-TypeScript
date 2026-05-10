@@ -1,8 +1,7 @@
 import axios from 'axios';
 import * as apiTypes from '../types/apiTypes';
 
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || 'https://ataa-charity-platform.vercel.app';
+const API_BASE_URL = 'https://ataa-charity-platform.vercel.app';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -135,7 +134,7 @@ export const markNotificationAsRead = (token: string, notificationId: string) =>
 export const deleteNotification = (token: string, notificationId: string) =>
   api.delete(`/notification/${notificationId}`, { headers: { Authorization: token } });
 
-// ✅ Cron (لو ستختبر باللوكال فقط)
+// ✅ Cron (اختياري للاختبار أو الإدارة)
 export const cronDonationReminder = (token: string) =>
   api.get('/cron/donationReminder', { headers: { Authorization: token } });
 

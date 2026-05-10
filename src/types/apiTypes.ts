@@ -1,13 +1,6 @@
 // -------- AUTH --------
-export interface LoginInput {
-  email: string;
-  password: string;
-}
-export interface AuthResponse {
-  success: boolean;
-  accessToken: string;
-  refreshToken: string;
-}
+export interface LoginInput { email: string; password: string; }
+export interface AuthResponse { success: boolean; accessToken: string; refreshToken: string; }
 export interface RegisterInput {
   userName?: string;
   charityName?: string;
@@ -35,7 +28,6 @@ export interface UserProfile {
   phone: string;
   address: string;
   roleType: 'user' | 'charity' | 'admin';
-  // أضف المزيد حسب الحاجة
 }
 export interface UpdateProfileInput { userName?: string; address?: string; phone?: string; }
 export interface ChangePasswordInput { oldPassword: string; newPassword: string; confirmPassword: string; }
