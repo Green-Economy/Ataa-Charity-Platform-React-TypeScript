@@ -91,13 +91,13 @@ function Router() {
 
       {/* ✅ Route التبرع الجديدة */}
       <Route path="/donate">
-        <ProtectedRoute allowedRoles={['user', 'donor']}>
+        <ProtectedRoute allowedRoles={['user']}>
           <PageTransition><DonationPage /></PageTransition>
         </ProtectedRoute>
       </Route>
 
       <Route path="/user-dashboard">
-        <ProtectedRoute allowedRoles={['user', 'donor']}>
+        <ProtectedRoute allowedRoles={['user']}>
           <PageTransition><UserDashboard /></PageTransition>
         </ProtectedRoute>
       </Route>
