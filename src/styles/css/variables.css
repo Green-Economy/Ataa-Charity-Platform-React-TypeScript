@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css');
+
+:root {
+  --teal-900: #0d3d3f;
+  --teal-800: #164e52;
+  --teal-700: #1e6268;
+  --teal-600: #267880;
+  --teal-500: #2e8e98;
+  --teal-400: #3ba8b4;
+  --teal-300: #5ec0cb;
+  --teal-200: #a8dde3;
+  --teal-100: #d0eff2;
+  --teal-50:  #eaf8f9;
+
+  --gold-600: #b8920a;
+  --gold-500: #c9a227;
+  --gold-400: #d4af37;
+  --gold-300: #e2c96b;
+  --gold-100: #f9f0cd;
+  --gold-50:  #fdf8e8;
+
+  --neutral-900: #111827;
+  --neutral-800: #1f2937;
+  --neutral-700: #374151;
+  --neutral-600: #4b5563;
+  --neutral-500: #6b7280;
+  --neutral-400: #9ca3af;
+  --neutral-300: #d1d5db;
+  --neutral-200: #e5e7eb;
+  --neutral-100: #f3f4f6;
+  --neutral-50:  #f9fafb;
+  --white: #ffffff;
+
+  --font: 'Tajawal', sans-serif;
+  --section-pad: 96px 5%;
+  --container-max: 1200px;
+
+  --r-sm:   8px;
+  --r-md:   14px;
+  --r-lg:   20px;
+  --r-xl:   28px;
+  --r-full: 9999px;
+
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:   0 4px 16px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-lg:   0 12px 40px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.06);
+  --shadow-teal: 0 8px 32px rgba(46,142,152,.25);
+}
+
+/* ── Reset ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html  { scroll-behavior: smooth; }
+body  {
+  font-family: var(--font);
+  background: var(--white);
+  color: var(--neutral-800);
+  direction: rtl;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+img       { display: block; max-width: 100%; }
+a         { text-decoration: none; color: inherit; }
+ul        { list-style: none; }
+button    { font-family: var(--font); cursor: pointer; border: none; outline: none; }
+input, textarea, select { font-family: var(--font); outline: none; }
+
+/* ── FIX #4: Layout shift fix — ensures content starts below fixed navbar ── */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body > #root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Main content wrapper — clears the 64px fixed navbar */
+.main-content {
+  flex: 1;
+  padding-top: 64px;
+}
+
+/* Pages that handle their own top padding (hero, etc.) */
+.main-content .page-wrapper {
+  padding-top: 0;
+}

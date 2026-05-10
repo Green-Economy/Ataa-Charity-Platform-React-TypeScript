@@ -1,0 +1,76 @@
+/* ═══════════════════════════════════════════
+   MEDIA QUERIES — Responsive
+═══════════════════════════════════════════ */
+
+/* ── Tablet / Small Desktop (≤ 960px) ── */
+@media (max-width: 960px) {
+  :root { --section-pad: 72px 5%; }
+
+  /* Navbar */
+  .nav-links, .nav-actions { display: none; }
+  .nav-ham { display: flex; }
+
+  /* Footer */
+  .footer-body { grid-template-columns: 1fr 1fr; }
+
+  /* Hero */
+  .hero-inner         { grid-template-columns: 1fr; text-align: center; gap: 40px; }
+  .hero-desc          { margin: 0 auto 36px; }
+  .hero-btns          { justify-content: center; }
+  .hero-stats         { justify-content: center; }
+  .hero-visual        { display: none; }
+
+  /* Sections */
+  .how-steps          { grid-template-columns: 1fr; }
+  .stats-inner        { grid-template-columns: 1fr; }
+  .stat-item::after   { display: none; }
+  .charity-cards      { grid-template-columns: 1fr 1fr; }
+  .charities-grid     { grid-template-columns: 1fr 1fr; }
+  .stats-grid         { grid-template-columns: 1fr 1fr; }
+
+  /* CTA */
+  .cta-banner  { flex-direction: column; text-align: center; padding: 48px 6%; }
+  .cta-btns    { justify-content: center; }
+
+  /* Pages */
+  .contact-wrap   { grid-template-columns: 1fr; }
+  .goals-grid     { grid-template-columns: 1fr; }
+  .values-grid    { grid-template-columns: 1fr 1fr; }
+  .team-grid      { grid-template-columns: 1fr 1fr; }
+
+  /* Settings */
+  .settings-layout    { flex-direction: column; }
+  .settings-nav       { width: 100%; }
+  .settings-nav-card  { position: static; }
+
+  /* Chat */
+  .chat-main      { flex-direction: column; }
+  .chat-sidebar   { width: 100%; }
+  .chat-messages  { max-height: 400px; }
+}
+
+/* ── Mobile (≤ 600px) ── */
+@media (max-width: 600px) {
+  :root { --section-pad: 60px 5%; }
+
+  /* Footer */
+  .footer-body    { grid-template-columns: 1fr; gap: 32px; }
+  .footer-bottom  { flex-direction: column; text-align: center; }
+
+  /* Cards & Grids */
+  .charity-cards    { grid-template-columns: 1fr; }
+  .charities-grid   { grid-template-columns: 1fr; }
+  .stats-grid       { grid-template-columns: 1fr; }
+  .values-grid      { grid-template-columns: 1fr; }
+  .team-grid        { grid-template-columns: 1fr 1fr; }
+
+  /* Forms */
+  .form-row       { grid-template-columns: 1fr; }
+  .form-grid      { grid-template-columns: 1fr; }
+  .role-picker    { grid-template-columns: 1fr 1fr; }
+
+  /* Misc */
+  .contact-form-card  { padding: 24px; }
+  .otp-wrap           { gap: 6px; }
+  .otp-digit          { width: 40px; height: 50px; font-size: 18px; }
+}

@@ -1,0 +1,101 @@
+:root{
+  --bg:#f7fafb;
+  --card:#fff;
+  --muted:#6b7280;
+  --text:#111827;
+  --accent:#10a37f; /* match dashboard green */
+  --accent-700:#0a8f77;
+  --danger:#dc2626;
+  --radius:14px;
+  --r-sm:8px;
+  --r-md:12px;
+  --shadow-md: 0 10px 30px rgba(2,6,23,0.06);
+  --shadow-lg: 0 18px 50px rgba(2,6,23,0.08);
+  font-family: "Tajawal", "Inter", system-ui, -apple-system, Arial;
+}
+
+/* page wrapper */
+.donation-page { background: var(--bg); padding: 24px 16px; min-height: 100vh; display:flex; justify-content:center; align-items:flex-start; }
+
+/* header area on DonationPage */
+.donation-page-head { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:16px; max-width:980px; width:100%; margin-left:auto; margin-right:auto; }
+.dp-title { margin:0; font-size:20px; font-weight:800; color:var(--text); }
+.dp-sub { margin:4px 0 0; color:var(--muted); font-size:13px; }
+
+/* card */
+.donation-card { width:100%; max-width:760px; background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow-md); padding:22px; border:1px solid rgba(15,23,42,0.04); overflow:hidden; }
+.animate-up { animation: cardUp .28s cubic-bezier(.2,.9,.3,1); }
+@keyframes cardUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: none;} }
+
+/* header inside card */
+.donation-header { text-align:center; margin-bottom:14px; }
+.donation-header h1 { margin:0; font-size:22px; color:var(--text); font-weight:900; }
+.donation-header p { margin:8px 0 0; color:var(--muted); font-size:14px; }
+
+/* form layout */
+.donation-form { display:flex; flex-direction:column; gap:14px; }
+.grid { display:block; }
+.two-cols { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+
+/* inputs */
+.form-group { display:flex; flex-direction:column; gap:8px; }
+label { font-weight:700; color:var(--muted); display:flex; gap:8px; align-items:center; }
+.input, select, textarea { padding:12px 14px; border-radius:10px; border:1.3px solid #e6eef0; background:#fbfeff; font-size:14px; color:var(--text); outline:none; transition: box-shadow .12s, border-color .12s; }
+.input:focus, select:focus, textarea:focus { box-shadow:0 8px 22px rgba(16,163,127,.06); border-color:var(--accent-700); }
+
+/* required marker */
+.req { color:var(--danger); margin-inline-start:6px; font-weight:900; }
+
+/* qty */
+.inline-qty { display:flex; gap:10px; align-items:center; }
+.qty-control { display:flex; align-items:center; gap:8px; background:#f6fbfb; padding:6px; border-radius:10px; border:1px solid #e6eef0; width:max-content; }
+.qty-btn { width:40px; height:40px; border-radius:10px; border:none; background:white; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--accent-700); box-shadow:0 1px 3px rgba(2,6,23,0.04); transition: transform .12s; }
+.qty-btn:hover { transform: translateY(-2px); }
+.qty-input { width:64px; text-align:center; font-weight:800; border:none; background:transparent; color:var(--text); font-size:16px; }
+
+/* conditions */
+.conditions { display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+.cond-btn { padding:10px 14px; border-radius:12px; border:1px solid #e6eef0; background:#fbfeff; font-weight:800; cursor:pointer; transition: all .14s; color:var(--muted); }
+.cond-btn.active { background:linear-gradient(180deg,var(--accent),var(--accent-700)); color:white; box-shadow:0 8px 22px rgba(16,163,127,0.12); transform: translateY(-4px); }
+
+/* upload */
+.upload-area { margin-top:8px; border-radius:12px; padding:28px; border:2px dashed #e6eef0; background:linear-gradient(180deg,#ffffff,#fbfeff); text-align:center; cursor:pointer; transition: all .14s; }
+.upload-area.dragover { background:linear-gradient(180deg,#ecffff,#f2fdfc); border-color:var(--accent-700); transform: translateY(-6px); box-shadow:var(--shadow-lg); }
+.upload-inner { display:flex; flex-direction:column; gap:8px; align-items:center; }
+.upload-ico { color:var(--accent); display:flex; align-items:center; justify-content:center; }
+.upload-text { font-weight:900; color:var(--text); }
+.upload-hint { color:#8a98a0; font-size:13px; }
+
+/* previews */
+.preview-grid { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+.preview-item { position:relative; width:96px; height:96px; border-radius:10px; overflow:hidden; border:1px solid #e6eef0; box-shadow:0 6px 18px rgba(2,6,23,0.04); transition: transform .12s; }
+.preview-item:hover { transform: translateY(-6px); }
+.preview-item img { width:100%; height:100%; object-fit:cover; display:block; }
+.preview-rm { position:absolute; top:6px; left:6px; width:28px; height:28px; border-radius:8px; border:none; background:rgba(0,0,0,0.6); color:white; font-weight:800; cursor:pointer; }
+
+/* notes */
+.notes-area { width:100%; min-height:96px; padding:12px; border-radius:10px; border:1px solid #e6eef0; background:#fbfeff; resize:vertical; }
+.notes-meta { text-align:left; color:#9aa5aa; font-size:13px; margin-top:6px; }
+
+/* messages */
+.field-error { margin-top:8px; color:var(--danger); background:#fff5f5; padding:8px 10px; border-radius:8px; border:1px solid #fed7d7; font-weight:700; }
+.global-error { margin-top:8px; color:var(--danger); background:#fff5f5; padding:10px 14px; border-radius:10px; border:1px solid #fed7d7; font-weight:800; }
+
+/* actions */
+.actions-row { display:flex; gap:12px; justify-content:space-between; align-items:center; margin-top:12px; }
+.btn { padding:12px 18px; border-radius:999px; border:none; font-weight:800; cursor:pointer; }
+.btn-ghost { background:transparent; color:var(--muted); border:1px solid #eef3f3; }
+.btn-primary { background:var(--accent); color:white; box-shadow:0 10px 30px rgba(16,163,127,0.12); min-width:220px; transition: transform .12s; }
+.btn-primary:hover { transform: translateY(-3px); }
+
+/* micro helpers */
+.animate-fade { animation: fadeIn .26s ease both; }
+@keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+
+/* responsive */
+@media (max-width: 800px) {
+  .two-cols { grid-template-columns: 1fr; }
+  .actions-row { flex-direction: column-reverse; }
+  .btn-primary { width:100%; min-width:unset; }
+  .preview-item { width:72px; height:72px; }
+}
