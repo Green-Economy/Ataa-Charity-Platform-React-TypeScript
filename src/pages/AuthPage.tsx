@@ -858,10 +858,11 @@ export default function AuthPage() {
 
         {/* Back to home */}
         <button className="lp-home-btn" onClick={() => setLocation('/')}>
-          <i className="fa-solid fa-arrow-right" /> العودة للرئيسية
-        </button>
+  <i className="fa-solid fa-arrow-right" style={{ color: '#000000' }} />
+  العودة للرئيسية
+</button>
 
-        {/* ── Main Container ── */}
+      {/* ── Main Container ── */}
         <div className={`lp-container${isSignup ? ' active' : ''}`} id="lp-container">
 
           {/* ── Forms Area ── */}
@@ -1021,11 +1022,11 @@ function AuthCSS() {
   position: fixed;
   top: 18px; right: 20px;
   z-index: 999;
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(16, 163, 127, 0.12);
+  border: 1.5px solid #10a37f;
   border-radius: var(--lp-r-full);
   padding: 8px 18px;
-  color: rgba(255,255,255,0.9);
+  color: #ffffff;
   font-family: var(--lp-font);
   font-size: 13px; font-weight: 600;
   cursor: pointer;
@@ -1033,8 +1034,11 @@ function AuthCSS() {
   transition: all 0.2s;
   backdrop-filter: blur(8px);
 }
-.lp-home-btn:hover { background: rgba(255,255,255,0.25); color: #fff; }
-
+.lp-home-btn:hover { 
+  background: rgba(16, 163, 127, 0.25); 
+  border-color: #12c49a;
+  color: #fff; 
+}
 /* ── Main Container ── */
 .lp-container {
   position: relative;
