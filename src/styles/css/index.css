@@ -10,3 +10,7 @@
 @import './AuthModals.css';   /* Auth modals, OTP, signup steps, donation/rating modals */
 @import './pages.css';         /* Page-specific: hero, dashboard, settings, chat, contact, about */
 @import './media-queries.css'; /* Responsive breakpoints — always last */
+/* style dashboard */
+@import './CharityDashboard.css';
+@import './UserDashboard.css';
+
