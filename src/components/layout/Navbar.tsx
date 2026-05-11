@@ -111,11 +111,16 @@ export default function Navbar() {
               </Link>
             ))}
 
-            {user && (
+            {/* {user && (
               <Link href="/user-dashboard" className={isActive('/user-dashboard') ? 'active' : ''}>
                 <i className='fa-solid fa-shirt' style={{ fontSize: 13 }} /> تبرعات
               </Link>
-            )}
+            )} */}
+            {user?.roleType === 'user' && (
+  <Link href="/user-dashboard" className={isActive('/user-dashboard') ? 'active' : ''}>
+    <i className='fa-solid fa-shirt' style={{ fontSize: 13 }} /> تبرعاتي
+  </Link>
+)}
 
             {user?.roleType === 'charity' && (
               <Link href="/dashboard" className={isActive('/dashboard') ? 'active' : ''}>
@@ -123,11 +128,16 @@ export default function Navbar() {
               </Link>
             )}
 
-            {user?.roleType === 'donor' && (
+            {/* {user?.roleType === 'donor' && (
               <Link href="/dashboard" className={isActive('/dashboard') ? 'active' : ''}>
                 حسابي
               </Link>
-            )}
+            )} */}
+            {user?.roleType === 'donor' && (
+  <Link href="/dashboard" className={`mobile-link${isActive('/dashboard') ? ' active' : ''}`}>
+    حسابي
+  </Link>
+)}
 
             {user?.roleType === 'admin' && (
               <Link href="/admin" className={isActive('/admin') ? 'active' : ''}>
@@ -179,11 +189,17 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
-          {user && (
-            <Link href="/user-dashboard" className={`mobile-link${isActive('/user-dashboard') ? ' active' : ''}`}>
-              <i className="fa-solid fa-shirt" /> تبرعات
-            </Link>
-          )}
+          {/* {user && ( */}
+          //   <Link href="/user-dashboard" className={`mobile-link${isActive('/user-dashboard') ? ' active' : ''}`}>
+          //     <i className="fa-solid fa-shirt" /> تبرعات
+          //   </Link>
+          {/* // )} */}
+          {user?.roleType === 'user' && (
+  <Link href="/user-dashboard" className={`mobile-link${isActive('/user-dashboard') ? ' active' : ''}`}>
+    <i className="fa-solid fa-shirt" /> تبرعاتي
+  </Link>
+)}
+
           {user?.roleType === 'charity' && (
             <Link href="/dashboard" className={`mobile-link${isActive('/dashboard') ? ' active' : ''}`}>
               لوحة التحكم

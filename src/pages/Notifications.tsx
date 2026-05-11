@@ -5,24 +5,24 @@ export default function Notifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
+  // ✅ BUG #5 FIX: إضافة state للأخطاء بدل .catch(() => {}) الصامت
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     notificationApi.getAll()
       .then(d => setNotifications(d.notifications || []))
-      .catch(() => {})
+      .catch(err => setError(err?.message || 'فشل تحميل الإشعارات، حاول مرة أخرى'))
       .finally(() => setLoading(false));
   }, []);
 
   const markRead = async (id: string) => {
     try {
       await notificationApi.markRead(id);
-      // FIX: use status field, not isRead
       setNotifications(prev => prev.map(n => n._id === id ? { ...n, status: 'read' as const } : n));
-    } catch { /* silent */ }
+    } catch { /* silent — عملية ثانوية */ }
   };
 
   const markAllRead = async () => {
-    // FIX: use status field, not isRead
     const unread = notifications.filter(n => n.status === 'unread');
     await Promise.allSettled(unread.map(n => notificationApi.markRead(n._id)));
     setNotifications(prev => prev.map(n => ({ ...n, status: 'read' as const })));
@@ -32,17 +32,15 @@ export default function Notifications() {
     try {
       await notificationApi.delete(id);
       setNotifications(prev => prev.filter(n => n._id !== id));
-    } catch { /* silent */ }
+    } catch { /* silent — عملية ثانوية */ }
   };
 
   const filtered = notifications.filter(n => {
-    // FIX: use status field, not isRead
     if (filter === 'unread') return n.status === 'unread';
     if (filter === 'read')   return n.status === 'read';
     return true;
   });
 
-  // FIX: use status field, not isRead
   const unreadCount = notifications.filter(n => n.status === 'unread').length;
 
   return (
@@ -55,6 +53,20 @@ export default function Notifications() {
       </div>
 
       <div style={{ maxWidth: 'var(--container-max)', width: '90%', margin: '32px auto 80px' }}>
+
+        {/* ✅ BUG #5 FIX: عرض رسالة خطأ واضحة للمستخدم */}
+        {error && (
+          <div className="modal-error" style={{ marginBottom: 20, borderRadius: 10, padding: '14px 18px' }}>
+            <i className="fas fa-exclamation-triangle" style={{ marginLeft: 8 }} />
+            {error}
+            <button
+              onClick={() => { setError(null); setLoading(true); notificationApi.getAll().then(d => setNotifications(d.notifications || [])).catch(err => setError(err?.message || 'فشل تحميل الإشعارات')).finally(() => setLoading(false)); }}
+              style={{ marginRight: 12, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', color: 'inherit', fontSize: 13 }}
+            >
+              إعادة المحاولة
+            </button>
+          </div>
+        )}
 
         {/* Toolbar */}
         <div className="notif-page-toolbar">
@@ -89,7 +101,6 @@ export default function Notifications() {
             {filtered.map(n => (
               <div
                 key={n._id}
-                // FIX: use status field, not isRead
                 className={`notif-page-item${n.status === 'unread' ? ' unread' : ''}`}
                 onClick={() => n.status === 'unread' && markRead(n._id)}
               >

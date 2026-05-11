@@ -1,112 +1,4 @@
-// // ✅ HTTP Client مع معالجة الـ Token صح (بدون Bearer) + Refresh تلقائي
-
-// const BASE_URL = import.meta.env.VITE_API_URL || 'https://ataa-charity-platform.vercel.app';
-
-// function getToken(): string | null {
-//   return localStorage.getItem('accessToken');
-// }
-
-// function getRefreshToken(): string | null {
-//   return localStorage.getItem('refreshToken');
-// }
-
-// async function refreshAccessToken(): Promise<string | null> {
-//   const refreshToken = getRefreshToken();
-//   if (!refreshToken) return null;
-
-//   try {
-//     const res = await fetch(`${BASE_URL}/auth/refreshToken`, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ refreshToken }),
-//     });
-
-//     if (!res.ok) return null;
-
-//     const data = await res.json();
-
-//     // ✅ الباك اند بيرجع: { tokens: { accessToken, refreshToken? } }
-//     const newToken = data?.tokens?.accessToken;
-//     if (!newToken) return null;
-
-//     localStorage.setItem('accessToken', newToken);
-
-//     // لو جاي توكن جديد للـ refresh، حدّثه
-//     const newRefresh = data?.tokens?.refreshToken;
-//     if (newRefresh) {
-//       localStorage.setItem('refreshToken', newRefresh);
-//     }
-
-//     return newToken;
-//   } catch (error) {
-//     console.error('❌ Token refresh failed:', error);
-//     return null;
-//   }
-// }
-
-// export async function request<T = any>(
-//   path: string,
-//   options: RequestInit = {},
-//   isFormData = false
-// ): Promise<T> {
-//   let token = getToken();
-  
-//   const headers: Record<string, string> = {};
-  
-//   // ✅ مفيش Content-Type مع FormData — المتصفح هيحطه أوتوماتيك
-//   if (!isFormData) {
-//     headers['Content-Type'] = 'application/json';
-//   }
-
-//   if (token) {
-//     headers['Authorization'] = token;
-//   }
-
-//   // المحاولة الأولى
-//   let res = await fetch(`${BASE_URL}${path}`, {
-//     ...options,
-//     headers: { ...headers, ...(options.headers as Record<string, string> || {}) },
-//   });
-
-//   // ✅ لو الـ 401، جرّب نعمل Refresh للتوكن
-//   if (res.status === 401 && token) {
-//     const newToken = await refreshAccessToken();
-    
-//     if (newToken) {
-//       // حاول تاني بالتوكن الجديد
-//       res = await fetch(`${BASE_URL}${path}`, {
-//         ...options,
-//         headers: { 
-//           ...headers, 
-//           Authorization: newToken,
-//           ...(options.headers as Record<string, string> || {}) 
-//         },
-//       });
-//     } else {
-//       // لو فشل الـ refresh، امسح التوكنات وارجع للوجين
-//       localStorage.removeItem('accessToken');
-//       localStorage.removeItem('refreshToken');
-//       window.location.href = '/';
-//       throw new Error('انتهت صلاحية الجلسة، يرجى تسجيل الدخول مجددًا');
-//     }
-//   }
-
-//   // ✅ قراءة الـ Response
-//   const contentType = res.headers.get('content-type');
-//   const data = contentType?.includes('application/json') 
-//     ? await res.json() 
-//     : { success: res.ok, message: await res.text() };
-
-//   // ✅ لو الـ request فشل، ارمي الـ error
-//   if (!res.ok) {
-//     const msg = data?.message || data?.error || 'حدث خطأ غير متوقع';
-//     throw new Error(Array.isArray(msg) ? msg[0] : msg);
-//   }
-
-//   return data as T;
-// }
-
-// ✅ HTTP Client مع معالجة الـ Token صح (بدون Bearer) + Refresh تلقائي
+// ─── HTTP Client — token without "Bearer" prefix + automatic refresh ──────────
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'https://ataa-charity-platform.vercel.app';
 
@@ -133,6 +25,7 @@ async function refreshAccessToken(): Promise<string | null> {
 
     const data = await res.json();
 
+    // Backend returns: { tokens: { accessToken, refreshToken? } }
     const newToken = data?.tokens?.accessToken;
     if (!newToken) return null;
 
@@ -154,18 +47,18 @@ export async function request<T = any>(
   path: string,
   options: RequestInit = {},
   isFormData = false,
-  requiresAuth = false  // ✅ لو true بس هيعمل redirect لو انتهت الجلسة
+  requiresAuth = false
 ): Promise<T> {
   const token = getToken();
 
   const headers: Record<string, string> = {};
 
-  // ✅ مفيش Content-Type مع FormData
+  // No Content-Type for FormData — browser sets it automatically with boundary
   if (!isFormData) {
     headers['Content-Type'] = 'application/json';
   }
 
-  // ✅ بيبعت الـ token لو موجود — في كل الحالات
+  // Send token WITHOUT "Bearer" prefix — matches backend expectation
   if (token) {
     headers['Authorization'] = token;
   }
@@ -175,7 +68,7 @@ export async function request<T = any>(
     headers: { ...headers, ...(options.headers as Record<string, string> || {}) },
   });
 
-  // ✅ لو 401 وعندنا token — جرب تعمل Refresh
+  // If 401 and we have a token — attempt refresh
   if (res.status === 401 && token) {
     const newToken = await refreshAccessToken();
 
@@ -192,7 +85,6 @@ export async function request<T = any>(
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
 
-      // ✅ redirect بس لو الـ endpoint محتاج auth فعلاً
       if (requiresAuth) {
         window.location.href = '/';
       }
@@ -201,16 +93,47 @@ export async function request<T = any>(
     }
   }
 
-  // ✅ قراءة الـ Response
+  // Parse response
   const contentType = res.headers.get('content-type');
-  const data = contentType?.includes('application/json')
-    ? await res.json()
-    : { success: res.ok, message: await res.text() };
+  let data: any;
+  try {
+    data = contentType?.includes('application/json')
+      ? await res.json()
+      : { success: res.ok, message: await res.text() };
+  } catch {
+    data = { success: res.ok, message: 'فشل في قراءة الرد' };
+  }
 
-  // ✅ ارمي الـ error بدون redirect
   if (!res.ok) {
-    const msg = data?.message || data?.error || 'حدث خطأ غير متوقع';
-    throw new Error(Array.isArray(msg) ? msg[0] : msg);
+    console.error(`❌ API Error [${res.status}] ${path}:`, data);
+
+    const raw =
+      data?.message ||
+      data?.error ||
+      data?.msg ||
+      data?.errors ||
+      data?.detail ||
+      null;
+
+    let msg: string;
+    if (!raw) {
+      if (res.status === 400)      msg = 'بيانات غير صحيحة، تحقق من المدخلات';
+      else if (res.status === 401) msg = 'غير مصرح، يرجى تسجيل الدخول';
+      else if (res.status === 403) msg = 'ليس لديك صلاحية للقيام بهذا الإجراء';
+      else if (res.status === 404) msg = 'المورد المطلوب غير موجود';
+      else if (res.status === 409) msg = 'البريد الإلكتروني أو رقم الهاتف مستخدم بالفعل';
+      else if (res.status === 500) msg = 'خطأ في الخادم، يرجى المحاولة لاحقاً';
+      else                         msg = `حدث خطأ (${res.status})`;
+    } else if (Array.isArray(raw)) {
+      const first = raw[0];
+      msg = typeof first === 'string' ? first : first?.message || JSON.stringify(first);
+    } else if (typeof raw === 'object') {
+      msg = raw?.message || raw?.msg || JSON.stringify(raw);
+    } else {
+      msg = String(raw);
+    }
+
+    throw new Error(msg || 'حدث خطأ غير متوقع');
   }
 
   return data as T;

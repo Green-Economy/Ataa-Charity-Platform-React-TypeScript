@@ -6,7 +6,7 @@ import type { LoginResponse, RegisterResponse } from '../types';
 export const authApi = {
 
   register: (body: {
-    // common — مطلوبين دايماً
+    // Required for all roles
     email: string;
     phone: string;
     password: string;
@@ -15,11 +15,11 @@ export const authApi = {
     roleType: 'user' | 'charity' | 'admin';
     // user + admin
     userName?: string;
-    // charity فقط
+    // charity only
     charityName?: string;
     charityDescription?: string;
     licenseNumber?: string;
-    // admin فقط — capital D كما هو في الـ API
+    // admin only — capital D as in the API
     nationalID?: string;
   }) =>
     request<RegisterResponse>('/auth/register', {

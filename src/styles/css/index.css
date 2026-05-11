@@ -7,6 +7,6 @@
 @import './animations.css';    /* @keyframes + animation utility classes */
 @import './utilities.css';     /* Shared helpers: container, buttons, forms, badges */
 @import './components.css';    /* Navbar, Footer, Modal base, Notification Bell */
-@import './auth-modals.css';   /* Auth modals, OTP, signup steps, donation/rating modals */
+@import './AuthModals.css';   /* Auth modals, OTP, signup steps, donation/rating modals */
 @import './pages.css';         /* Page-specific: hero, dashboard, settings, chat, contact, about */
 @import './media-queries.css'; /* Responsive breakpoints — always last */

@@ -27,7 +27,7 @@ const SIDEBAR_LINKS = [
 ];
 
 const SUGGESTION_CARDS = [
-  { icon: 'ti-shirt',         title: 'الملابس المقبولة للتبرع',  sub: '��ا هي أنواع الملابس المناسبة؟'  },
+  { icon: 'ti-shirt',         title: 'الملابس المقبولة للتبرع',  sub: 'ما هي أنواع الملابس المناسبة؟'  },
   { icon: 'ti-map-pin',       title: 'أقرب جمعية خيرية',          sub: 'ابحث عن جمعية بالقرب منك'        },
   { icon: 'ti-checklist',     title: 'حالة الملابس المطلوبة',     sub: 'ما هي المواصفات المقبولة؟'       },
   { icon: 'ti-baby-carriage', title: 'تبرع بملابس الأطفال',       sub: 'هل يمكن التبرع بملابس الأطفال؟' },
@@ -89,12 +89,10 @@ export default function AIChat() {
     });
   }, []);
 
-  // ✅ اسكرول فورًا لما تضيف رسالة
-  useEffect(() => { 
-    scrollToBottom(); 
+  useEffect(() => {
+    scrollToBottom();
   }, [messages, scrollToBottom]);
 
-  // ✅ اسكرول فورًا لما تحصل على رد
   useEffect(() => {
     if (!loading && messages.length > 0) {
       scrollToBottom();
@@ -130,26 +128,30 @@ export default function AIChat() {
 
     try {
       let reply: string;
-      
+
       if (images && images.length > 0) {
         const fd = new FormData();
-        // ✅ الـ API بيتوقع 'data' كاسم للصور، مش image_0 إلخ
-        images.forEach((img) => {
-          fd.append('data', img.file);
-        });
-        // ✅ بعت الـ message مع الصور لو موجود
-        if (text.trim()) fd.append('message', text.trim());
+        // ✅ الـ API بيتوقع 'data' كاسم للصور
+        images.forEach((img) => fd.append('data', img.file));
+        // ✅ FIX BUG #3: أرسل message دائماً حتى لو فارغ — Backend يتطلبه مع الصور
+        fd.append('message', text.trim() || 'حلّل هذه الصورة');
         const res = await aiApi.analysis(fd);
-        reply = res.result || 'عذرًا، لم أتمكن من تحليل الصور.';
+        // ✅ نجرب كل الحقول الممكنة في الـ response
+        reply = (res as any).result || (res as any).reply || (res as any).message || (res as any).data || 'تم تحليل الصورة، لم يرجع رد واضح.';
       } else {
         const res = await aiApi.chat(text);
-        reply = res.reply || res.message || res.data || 'عذرًا، لم أفهم سؤالك.';
+        // ✅ نجرب كل الحقول الممكنة في الـ response
+        reply = (res as any).reply || (res as any).message || (res as any).data || (res as any).result || (res as any).response || 'تم إرسال رسالتك.';
       }
-      
+
       setMessages(prev => [...prev, { role: 'bot', text: reply }]);
     } catch (error) {
-      console.error('Chat error:', error);
-      setMessages(prev => [...prev, { role: 'bot', text: 'عذرًا، حدث خطأ. حاول مرة أخرى.' }]);
+      const errMsg = error instanceof Error ? error.message : 'خطأ غير معروف';
+      console.error('Chat error:', errMsg, error);
+      setMessages(prev => [
+        ...prev,
+        { role: 'bot', text: `⚠️ ${errMsg}` },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -172,7 +174,7 @@ export default function AIChat() {
     if (!files || files.length === 0) return;
 
     const remainingSlots = MAX_IMAGES - pendingImages.length;
-    
+
     if (remainingSlots <= 0) {
       alert(`وصلت للحد الأقصى: ${MAX_IMAGES} صور`);
       e.target.value = '';
@@ -185,7 +187,6 @@ export default function AIChat() {
     const errors: string[] = [];
 
     filesToProcess.forEach((file) => {
-      // تحقق من نوع الملف
       if (!file.type.startsWith('image/')) {
         errors.push(`${file.name} ليس صورة`);
         loadedCount++;
@@ -193,7 +194,6 @@ export default function AIChat() {
         return;
       }
 
-      // تحقق من حجم الملف (5MB max)
       if (file.size > 5 * 1024 * 1024) {
         errors.push(`${file.name} حجمها كبير جداً`);
         loadedCount++;
@@ -202,12 +202,9 @@ export default function AIChat() {
       }
 
       const reader = new FileReader();
-      
+
       reader.onload = () => {
-        newImages.push({
-          file,
-          preview: reader.result as string,
-        });
+        newImages.push({ file, preview: reader.result as string });
         loadedCount++;
         if (loadedCount === filesToProcess.length) finishLoading();
       };
@@ -222,12 +219,8 @@ export default function AIChat() {
     });
 
     const finishLoading = () => {
-      if (newImages.length > 0) {
-        setPendingImages(prev => [...prev, ...newImages]);
-      }
-      if (errors.length > 0) {
-        console.warn('أخطاء:', errors);
-      }
+      if (newImages.length > 0) setPendingImages(prev => [...prev, ...newImages]);
+      if (errors.length > 0) console.warn('أخطاء:', errors);
     };
 
     e.target.value = '';
@@ -247,22 +240,16 @@ export default function AIChat() {
 
   return (
     <>
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"
-      />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
 
       <div className="ac-root">
 
-        {/* Overlay */}
         <div
           className={`ac-overlay${sidebarOpen && window.innerWidth < 768 ? ' visible' : ''}`}
           onClick={closeSidebar}
         />
 
-        {/* ═══ SIDEBAR ═══ */}
         <aside className={`ac-sidebar${sidebarOpen ? '' : ' closed'}`}>
-
           <div className="ac-sb-header">
             <div className="ac-sb-brand">
               <div className="ac-sb-brand-ico">
@@ -273,12 +260,7 @@ export default function AIChat() {
                 <span className="ac-sb-brand-sub">ذكاء اصطناعي</span>
               </div>
             </div>
-            <button 
-              className="ac-sb-close-btn"
-              onClick={closeSidebar}
-              aria-label="إغلاق"
-              type="button"
-            >
+            <button className="ac-sb-close-btn" onClick={closeSidebar} aria-label="إغلاق" type="button">
               <i className="ti ti-x" aria-hidden="true" />
             </button>
           </div>
@@ -313,13 +295,10 @@ export default function AIChat() {
               <div className="ac-sb-footer-role">{role}</div>
             </div>
           </div>
-
         </aside>
 
-        {/* ═══ MAIN ═══ */}
         <main className="ac-main">
 
-          {/* Topbar */}
           <div className="ac-topbar">
             <div className="ac-topbar-left">
               <button
@@ -340,7 +319,6 @@ export default function AIChat() {
             </div>
           </div>
 
-          {/* Messages */}
           <div className="ac-msgs" ref={msgsRef}>
             <div className="ac-msgs-inner">
 
@@ -354,9 +332,7 @@ export default function AIChat() {
                   <div className="ac-cards">
                     {SUGGESTION_CARDS.map(c => (
                       <button key={c.title} className="ac-card" onClick={() => sendMessage(c.title)}>
-                        <span className="ac-card-ico">
-                          <i className={`ti ${c.icon}`} aria-hidden="true" />
-                        </span>
+                        <span className="ac-card-ico"><i className={`ti ${c.icon}`} aria-hidden="true" /></span>
                         <span className="ac-card-title">{c.title}</span>
                         <span className="ac-card-sub">{c.sub}</span>
                       </button>
@@ -368,13 +344,10 @@ export default function AIChat() {
                   <div key={i}>
                     <div className={`ac-row ${m.role === 'user' ? 'ac-user' : 'ac-bot'}`}>
                       <div className={`ac-av ${m.role === 'user' ? 'ac-user' : 'ac-bot'}`}>
-                        {m.role === 'bot'
-                          ? <i className="ti ti-robot" aria-hidden="true" />
-                          : userInitial}
+                        {m.role === 'bot' ? <i className="ti ti-robot" aria-hidden="true" /> : userInitial}
                       </div>
                       <div className="ac-msg-body">
                         {m.role === 'bot' && <div className="ac-bot-label">مساعد عطاء</div>}
-                        
                         {m.imageUrls && m.imageUrls.length > 0 && (
                           <div className="ac-img-gallery">
                             {m.imageUrls.map((imgUrl, idx) => (
@@ -384,14 +357,12 @@ export default function AIChat() {
                             ))}
                           </div>
                         )}
-                        
                         {m.isAnalysis && (
                           <span className="ac-analysis-badge">
                             <i className="ti ti-zoom-scan" style={{ fontSize: 14 }} aria-hidden="true" />
                             تحليل بالذكاء الاصطناعي
                           </span>
                         )}
-                        
                         {m.text && (
                           m.role === 'user'
                             ? <div className="ac-bubble-user">{m.text}</div>
@@ -409,21 +380,14 @@ export default function AIChat() {
                   <div className="ac-av ac-bot">
                     <i className="ti ti-robot" aria-hidden="true" />
                   </div>
-                  <div className="ac-typing">
-                    <span /><span /><span />
-                  </div>
+                  <div className="ac-typing"><span /><span /><span /></div>
                 </div>
               )}
 
               {showQuickReplies && !isEmpty && (
                 <div className="ac-qr">
                   {QUICK_REPLIES.map(qr => (
-                    <button
-                      key={qr}
-                      className="ac-qr-btn"
-                      disabled={loading}
-                      onClick={() => sendMessage(qr)}
-                    >
+                    <button key={qr} className="ac-qr-btn" disabled={loading} onClick={() => sendMessage(qr)}>
                       {qr}
                     </button>
                   ))}
@@ -434,7 +398,6 @@ export default function AIChat() {
             </div>
           </div>
 
-          {/* Input */}
           <div className="ac-input-zone">
             <div className="ac-input-inner">
               <div className="ac-input-box">
@@ -445,12 +408,7 @@ export default function AIChat() {
                       {pendingImages.map((img, idx) => (
                         <div key={idx} className="ac-pend-thumb">
                           <img src={img.preview} alt={`معاينة ${idx + 1}`} />
-                          <button 
-                            type="button"
-                            className="ac-pend-x" 
-                            onClick={() => removeImage(idx)}
-                            aria-label="حذف الصورة"
-                          >
+                          <button type="button" className="ac-pend-x" onClick={() => removeImage(idx)} aria-label="حذف الصورة">
                             <i className="ti ti-x" aria-hidden="true" />
                           </button>
                         </div>
@@ -474,14 +432,7 @@ export default function AIChat() {
                     onChange={handleAutoResize}
                     onKeyDown={handleKeyDown}
                   />
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    style={{ display: 'none' }}
-                    onChange={handleFileChange}
-                  />
+                  <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={handleFileChange} />
                   <button
                     type="button"
                     className="ac-icon-btn ac-img-btn"

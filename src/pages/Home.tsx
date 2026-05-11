@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { charityApi, Charity } from '../services';
@@ -10,20 +9,16 @@ export default function Home() {
   const [loadingCharities, setLoadingCharities] = useState(true);
   const [showDonate, setShowDonate] = useState(false);
   const { user } = useAuth();
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
 
-const handleDonateClick = () => {
-  if (user) {
-    setShowDonate(true);
-  } else {
-    setLocation('/authModals', { 
-      state: { 
-        from: location,
-        actionAfterLogin: 'donate'
-      } 
-    });
-  }
-};
+  const handleDonateClick = () => {
+    if (user) {
+      setShowDonate(true);
+    } else {
+      setLocation('/authModals');
+    }
+  };
+
   useEffect(() => {
     charityApi.getAll()
       .then(d => setCharities(d.charities?.slice(0, 3) || []))
@@ -49,8 +44,7 @@ const handleDonateClick = () => {
               منصة عطاء تربط المتبرعين بالجمعيات الخيرية المعتمدة لتوصيل ملابسك
               المستعملة لمن يحتاجها بطريقة سهلة وآمنة وشفافة.
             </p>
-            
-            {/* ✅ أزرار Hero - تم تعديل زر التبرع */}
+
             <div className="hero-btns">
               <button className="btn-gold" onClick={handleDonateClick}>
                 <i className="fas fa-heart" /> تبرع الآن
@@ -77,12 +71,12 @@ const handleDonateClick = () => {
           </div>
           <div className="hero-visual">
             <div className="hero-img-wrap">
-              <img 
-                src="/images/hero.jpeg" 
-                alt="عطاء" 
-                onError={e => { 
-                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=800'; 
-                }} 
+              <img
+                src="/images/hero.jpeg"
+                alt="عطاء"
+                onError={e => {
+                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=800';
+                }}
               />
               <div className="hero-img-badge">
                 <div className="hero-img-badge-icon">🤝</div>
@@ -106,26 +100,26 @@ const handleDonateClick = () => {
           </div>
           <div className="how-steps" data-stagger>
             {[
-              { 
-                num: '١', 
-                icon: '📦', 
-                color: 'teal', 
-                title: 'سجّل تبرعك', 
-                desc: 'أدخل تفاصيل الملابس التي تريد التبرع بها وارفع صورها لنقيّمها ونتأكد من جودتها.' 
+              {
+                num: '١',
+                icon: '📦',
+                color: 'teal',
+                title: 'سجّل تبرعك',
+                desc: 'أدخل تفاصيل الملابس التي تريد التبرع بها وارفع صورها لنقيّمها ونتأكد من جودتها.',
               },
-              { 
-                num: '٢', 
-                icon: '🏠', 
-                color: 'gold', 
-                title: 'اختر الجمعية', 
-                desc: 'اختر الجمعية الخيرية المعتمدة الأقرب إليك لاستلام تبرعك أو تحديد موعد للاستلام.' 
+              {
+                num: '٢',
+                icon: '🏠',
+                color: 'gold',
+                title: 'اختر الجمعية',
+                desc: 'اختر الجمعية الخيرية المعتمدة الأقرب إليك لاستلام تبرعك أو تحديد موعد للاستلام.',
               },
-              { 
-                num: '٣', 
-                icon: '🚚', 
-                color: 'blue', 
-                title: 'توصيل التبرع', 
-                desc: 'سنتولى توصيل تبرعك للجمعية المختارة بأمان وسرعة، لتصل لمستحقيها في الوقت المناسب.' 
+              {
+                num: '٣',
+                icon: '🚚',
+                color: 'blue',
+                title: 'توصيل التبرع',
+                desc: 'سنتولى توصيل تبرعك للجمعية المختارة بأمان وسرعة، لتصل لمستحقيها في الوقت المناسب.',
               },
             ].map(s => (
               <div key={s.num} className="step-card">
@@ -179,8 +173,8 @@ const handleDonateClick = () => {
                     <img
                       src={i === 0 ? '/images/images11.jpg' : i === 1 ? '/images/hero.jpeg' : '/images/hero-img-aleslah.png'}
                       alt={c.charityName}
-                      onError={e => { 
-                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=500'; 
+                      onError={e => {
+                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=500';
                       }}
                     />
                     <span className="charity-card-badge">{c.address}</span>
@@ -190,9 +184,9 @@ const handleDonateClick = () => {
                       <img
                         src={i === 0 ? '/images/logo2.png' : i === 1 ? '/images/Resala-logo.png' : '/images/logo-header-eslah.png'}
                         alt={c.charityName}
-                        onError={e => { 
-                          (e.target as HTMLImageElement).src = ''; 
-                          (e.target as HTMLImageElement).style.display='none'; 
+                        onError={e => {
+                          (e.target as HTMLImageElement).src = '';
+                          (e.target as HTMLImageElement).style.display = 'none';
                         }}
                       />
                     </div>
@@ -221,7 +215,6 @@ const handleDonateClick = () => {
           <p>انضم لآلاف المتبرعين الذين يصنعون فرقًا حقيقيًا في حياة المحتاجين كل يوم.</p>
         </div>
         <div className="cta-btns">
-          {/* ✅ زر التبرع في CTA - تم تعديله أيضًا */}
           <button className="btn-gold" onClick={handleDonateClick}>
             <i className="fas fa-heart" /> تبرع الآن
           </button>
@@ -238,51 +231,51 @@ const handleDonateClick = () => {
 // ==================== FallbackCharities Component ====================
 function FallbackCharities({ onDonate }: { onDonate: () => void }) {
   const items = [
-    { 
-      name: 'مؤسسة الإصلاح الخيرية', 
-      desc: 'نسعى لتحقيق الاستدامة في العمل الخيري من خلال برامجنا المتنوعة وتوزيع الملابس.', 
-      city: 'الجيزة', 
-      img: '/images/sadka.jpg', 
-      logo: '/images/logo2.png' 
+    {
+      name: 'مؤسسة الإصلاح الخيرية',
+      desc: 'نسعى لتحقيق الاستدامة في العمل الخيري من خلال برامجنا المتنوعة وتوزيع الملابس.',
+      city: 'الجيزة',
+      img: '/images/sadka.jpg',
+      logo: '/images/logo2.png',
     },
-    { 
-      name: 'جمعية رسالة الخيرية', 
-      desc: 'متخصصون في جمع وتوزيع التبرعات العينية للأسر الأكثر احتياجًا بطريقة إنسانية.', 
-      city: 'الإسكندرية', 
-      img: '/images/Resala-logo.png', 
-      logo: '/images/Resala-logo.png' 
+    {
+      name: 'جمعية رسالة الخيرية',
+      desc: 'متخصصون في جمع وتوزيع التبرعات العينية للأسر الأكثر احتياجًا بطريقة إنسانية.',
+      city: 'الإسكندرية',
+      img: '/images/Resala-logo.png',
+      logo: '/images/Resala-logo.png',
     },
-    { 
-      name: 'بنك كساء المصري', 
-      desc: 'نعمل على دعم الأسر المتعففة وتوفير احتياجاتهم الأساسية من ملابس واحتياجات أخرى.', 
-      city: 'القاهرة', 
-      img: '/images/hero-img-aleslah.png', 
-      logo: '/images/logo-fotter.jpg' 
+    {
+      name: 'بنك كساء المصري',
+      desc: 'نعمل على دعم الأسر المتعففة وتوفير احتياجاتهم الأساسية من ملابس واحتياجات أخرى.',
+      city: 'القاهرة',
+      img: '/images/hero-img-aleslah.png',
+      logo: '/images/logo-fotter.jpg',
     },
   ];
-  
+
   return (
     <div className="charity-cards">
       {items.map(c => (
         <div key={c.name} className="charity-card">
           <div className="charity-card-img">
-            <img 
-              src={c.img} 
-              alt={c.name} 
-              onError={e => { 
-                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=500'; 
-              }} 
+            <img
+              src={c.img}
+              alt={c.name}
+              onError={e => {
+                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=500';
+              }}
             />
             <span className="charity-card-badge">{c.city}</span>
           </div>
           <div className="charity-card-body">
             <div className="charity-card-logo">
-              <img 
-                src={c.logo} 
-                alt={c.name} 
-                onError={e => { 
-                  (e.target as HTMLImageElement).style.display = 'none'; 
-                }} 
+              <img
+                src={c.logo}
+                alt={c.name}
+                onError={e => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
               />
             </div>
             <h3>{c.name}</h3>

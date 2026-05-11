@@ -1,45 +1,21 @@
-// // ─── NOTIFICATIONS ENDPOINTS ─────────────────────────────────────────────────
-
-// import { request } from '../api.client';
-// import type { Notification } from '../types';
-
-// export const notificationApi = {
-//   getAll: () =>
-//     request<{ success: boolean; notifications: Notification[] }>('/notification'),
-
-//   markRead: (id: string) =>
-//     request(`/notification/${id}`, {
-//       method: 'PATCH',
-//       body: JSON.stringify({ status: 'read' }),
-//     }),
-
-//   delete: (id: string) =>
-//     request(`/notification/${id}`, { method: 'DELETE' }),
-// };
-
-// ═══════════════════════════════════════════════════════════════
-// ФАЙЛ: src/services/endpoints/notifications.ts — مُصلَح
-// الإصلاح: Warning #7 — أضف markUnread لمطابقة Postman
-// ═══════════════════════════════════════════════════════════════
+// ─── NOTIFICATIONS ENDPOINTS ─────────────────────────────────────────────────
 
 import { request } from '../api.client';
 import type { Notification } from '../types';
 
 export const notificationApi = {
-  /** GET /notification — يرجع { success, notifications } */
+  /** GET /notification — returns { success, notifications } */
   getAll: () =>
     request<{ success: boolean; notifications: Notification[] }>('/notification'),
 
-  /** PATCH /notification/:id — { status: 'read' } */
+  /** PATCH /notification/:id — mark as read */
   markRead: (id: string) =>
     request(`/notification/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ status: 'read' }),
     }),
 
-  /** PATCH /notification/:id — { status: 'unread' }
-   *  موجود في Postman Collection — أضفناه للاكتمال
-   */
+  /** PATCH /notification/:id — mark as unread */
   markUnread: (id: string) =>
     request(`/notification/${id}`, {
       method: 'PATCH',

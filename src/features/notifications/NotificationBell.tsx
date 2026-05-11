@@ -6,19 +6,22 @@ export default function NotificationBell() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  // ✅ BUG #5 FIX: إضافة error state بدل silent catch
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const dropRef = useRef<HTMLDivElement>(null);
   const [, setLocation] = useLocation();
 
-  // FIX: use status field, not isRead
   const unread = notifications.filter(n => n.status === 'unread').length;
 
   const fetchNotifications = async () => {
     setLoading(true);
+    setFetchError(null);
     try {
       const data = await notificationApi.getAll();
       setNotifications(data.notifications || []);
-    } catch {
-      // silent
+    } catch (err: unknown) {
+      // ✅ BUG #5 FIX: نحفظ الخطأ ونعرضه في الـ dropdown
+      setFetchError(err instanceof Error ? err.message : 'فشل تحميل الإشعارات');
     } finally {
       setLoading(false);
     }
@@ -43,9 +46,8 @@ export default function NotificationBell() {
   const markRead = async (id: string) => {
     try {
       await notificationApi.markRead(id);
-      // FIX: use status field, not isRead
       setNotifications(prev => prev.map(n => n._id === id ? { ...n, status: 'read' as const } : n));
-    } catch { /* silent */ }
+    } catch { /* silent — عملية ثانوية */ }
   };
 
   const handleViewAll = () => {
@@ -78,6 +80,18 @@ export default function NotificationBell() {
               <div className="notif-drop-empty">
                 <div className="spinner" style={{ padding: 20 }}><div className="spinner-ring" /></div>
               </div>
+            ) : fetchError ? (
+              // ✅ BUG #5 FIX: عرض رسالة خطأ في الـ dropdown مع زرار إعادة المحاولة
+              <div className="notif-drop-empty" style={{ padding: '16px 12px', gap: 8 }}>
+                <i className="fas fa-exclamation-circle" style={{ fontSize: 24, color: 'var(--danger, #ef4444)' }} />
+                <p style={{ fontSize: 13, margin: 0 }}>{fetchError}</p>
+                <button
+                  onClick={fetchNotifications}
+                  style={{ fontSize: 12, marginTop: 4, background: 'none', border: '1px solid currentColor', borderRadius: 6, padding: '4px 12px', cursor: 'pointer', color: 'inherit' }}
+                >
+                  إعادة المحاولة
+                </button>
+              </div>
             ) : notifications.length === 0 ? (
               <div className="notif-drop-empty">
                 <i className="fas fa-bell-slash" style={{ fontSize: 28, color: 'var(--neutral-300)', marginBottom: 8 }} />
@@ -87,7 +101,6 @@ export default function NotificationBell() {
               notifications.slice(0, 5).map(n => (
                 <div
                   key={n._id}
-                  // FIX: use status field, not isRead
                   className={`notif-drop-item${n.status === 'unread' ? ' unread' : ''}`}
                   onClick={() => n.status === 'unread' && markRead(n._id)}
                 >

@@ -20,7 +20,8 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Terms from './pages/Terms';
 import FAQ from './pages/FAQ';
 import AuthPage from './pages/AuthPage';
-import DonationPage from './components/shared/DonationModal';
+import { DonationPage } from './components/shared/DonationModal';
+import ForgotPasswordPage from './pages/ForgetPasswordPage';
 import { RouteGuard } from './components/RouteGuard';
 import { initScrollReveal } from './utils/scrollReveal';
 import { useLocation } from 'wouter';
@@ -78,6 +79,9 @@ function Router() {
       <Route path="/authModals">
         <PageTransition><AuthPage /></PageTransition>
       </Route>
+      <Route path="/forgot-password">
+        <PageTransition><ForgotPasswordPage /></PageTransition>
+      </Route>
       <Route path="/settings">
         <ProtectedRoute>
           <PageTransition><Settings /></PageTransition>
@@ -88,14 +92,11 @@ function Router() {
           <PageTransition><Notifications /></PageTransition>
         </ProtectedRoute>
       </Route>
-
-      {/* ✅ Route التبرع الجديدة */}
       <Route path="/donate">
         <ProtectedRoute allowedRoles={['user']}>
           <PageTransition><DonationPage /></PageTransition>
         </ProtectedRoute>
       </Route>
-
       <Route path="/user-dashboard">
         <ProtectedRoute allowedRoles={['user']}>
           <PageTransition><UserDashboard /></PageTransition>
@@ -121,17 +122,18 @@ function App() {
     <AuthProvider>
       <WouterRouter base={import.meta.env.BASE_URL?.replace(/\/$/, '') || ''}>
         <RouteGuard />
+
         <AppInner />
 
         <Switch>
-          {/* ── AIChat: بدون Navbar وFooter ── */}
+          {/* AIChat: بدون Navbar وFooter */}
           <Route path="/ai-chat">
             <ProtectedRoute>
               <AIChat />
             </ProtectedRoute>
           </Route>
 
-          {/* ── باقي الصفحات: معها Navbar وFooter ── */}
+          {/* باقي الصفحات: معها Navbar وFooter */}
           <Route>
             <Navbar />
             <main className="main-content">

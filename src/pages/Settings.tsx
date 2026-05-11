@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'wouter';
 import { useAuth } from '../contexts/AuthContext';
-import { usersApi, donorApi, notificationApi, charityApi, Charity, Donation, Notification } from '../services';
+import { usersApi, donorApi, notificationApi, charityApi, Charity, Donation, Notification, request } from '../services';
 import { statusLabel, formatDate } from '../lib/utils';
 import RatingModal from '../features/rating/RatingModal';
 
@@ -24,15 +24,28 @@ export default function Settings() {
   useEffect(() => {
     if (user) {
       setProfileForm({ userName: user.userName || '', phone: user.phone || '', address: user.address || '' });
+      // if (user.roleType === 'charity') {
+      //   charityApi.getAll().then(d => {
+      //     const mine = d.charities?.find(c => c.email === user.email);
+      //     if (mine) {
+      //       setCharityProfile(mine);
+      //       setCharityForm({ charityName: mine.charityName || '', address: mine.address || '', description: mine.description || '' });
+      //     }
+      //   }).catch(() => {});
+      // }
       if (user.roleType === 'charity') {
-        charityApi.getAll().then(d => {
-          const mine = d.charities?.find(c => c.email === user.email);
-          if (mine) {
-            setCharityProfile(mine);
-            setCharityForm({ charityName: mine.charityName || '', address: mine.address || '', description: mine.description || '' });
-          }
-        }).catch(() => {});
-      }
+  request('/users/profile').then((d: any) => {
+    const c = d?.user || d?.finder || d?.data;
+    if (c) {
+      setCharityProfile(c as any);
+      setCharityForm({
+        charityName: c.charityName || c.userName || '',
+        address: c.address || '',
+        description: c.charityDescription || c.description || '',
+      });
+    }
+  }).catch(() => {});
+}
     }
   }, [user]);
 

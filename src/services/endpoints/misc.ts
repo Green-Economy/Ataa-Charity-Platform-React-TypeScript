@@ -4,12 +4,14 @@ import { request } from '../api.client';
 import type { Rating, Report } from '../types';
 
 export const ratingApi = {
+  /** POST /rating/:donationId */
   create: (donationId: string, body: { rating: number; comment?: string }) =>
     request(`/rating/${donationId}`, {
       method: 'POST',
       body: JSON.stringify(body),
     }),
 
+  /** GET /rating/:donationId */
   get: (donationId: string) =>
     request<{ success: boolean; rating: Rating }>(`/rating/${donationId}`),
 };
@@ -34,6 +36,7 @@ export const reportApi = {
 // ─── AI ENDPOINTS ────────────────────────────────────────────────────────────
 
 export const aiApi = {
+  /** POST /ai/chat — { message } */
   chat: (message: string) =>
     request<{ success: boolean; reply: string }>('/ai/chat', {
       method: 'POST',

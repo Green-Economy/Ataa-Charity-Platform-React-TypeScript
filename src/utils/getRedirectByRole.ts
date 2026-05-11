@@ -1,9 +1,9 @@
 export function getRedirectByRole(role?: string | null): string {
   if (!role || typeof role !== 'string') return '/';
-  
-  const normalizedRole = role.toLowerCase().trim().replace(/\s+/g, '');
-  
-  switch (normalizedRole) {
+
+  const normalized = role.toLowerCase().trim().replace(/\s+/g, '');
+
+  switch (normalized) {
     case 'admin':
     case 'مدير':
       return '/admin';
@@ -21,7 +21,6 @@ export function getRedirectByRole(role?: string | null): string {
   }
 }
 
-// ✅ أضف الفانكشن دي هنا
 export function isRoleAllowed(role: string | undefined, allowedRoles: string[]): boolean {
   if (!role) return false;
   return allowedRoles.includes(role);

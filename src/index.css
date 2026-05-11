@@ -2,4 +2,4 @@
  * ATAA — CSS Entry Point (src/index.css)
  * Using relative path so Vite/Tailwind can resolve the file correctly.
  */
-@import 'styles/css/index.css';
+@import './styles/css/index.css';
