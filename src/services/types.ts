@@ -93,7 +93,7 @@ export interface LoginResponse {
   message?: string;
   tokens: {
     accessToken: string;
-    refreshToken: string;
+    refreshToken?: string;
   };
   user: User;
 }

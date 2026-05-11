@@ -27,11 +27,33 @@ export const authApi = {
       body: JSON.stringify(body),
     }),
 
-  login: (body: { email: string; password: string }) =>
-    request<LoginResponse>('/auth/login', {
+  login: async (body: { email: string; password: string }) => {
+    const data = await request<any>('/auth/login', {
       method: 'POST',
       body: JSON.stringify(body),
-    }),
+    });
+
+    const tokens = data?.tokens || {
+      accessToken: data?.accessToken || data?.token,
+      refreshToken: data?.refreshToken || data?.refresh,
+    };
+
+    const user =
+      data?.user ||
+      data?.finder ||
+      data?.account ||
+      data?.data?.user ||
+      data?.data?.finder ||
+      data?.result?.user ||
+      data?.result?.finder ||
+      (data?.data && !data.data.accessToken && !data.data.token ? data.data : null);
+
+    return {
+      ...data,
+      tokens,
+      user,
+    } as LoginResponse;
+  },
 
   verifyEmail: (body: { email: string; code: string }) =>
     request('/auth/verifyEmail', {

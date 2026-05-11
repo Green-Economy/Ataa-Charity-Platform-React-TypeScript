@@ -17,6 +17,8 @@ const CRON_COOLDOWN_MS = 30_000;
 export default function AdminPanel() {
   const { user, isLoading } = useAuth();
   const [tab, setTab] = useState<Tab>('users');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [adminSearch, setAdminSearch] = useState('');
 
   const [users, setUsers]         = useState<User[]>([]);
   const [charities, setCharities] = useState<Charity[]>([]);
@@ -213,6 +215,24 @@ export default function AdminPanel() {
     { id: 'reports',    label: 'التقارير',          icon: '🚨', count: reports.length },
     { id: 'automation', label: 'التشغيل التلقائي',  icon: '⚙️', count: 0 },
   ];
+  const sideItems = [
+    { label: 'Dashboard', icon: 'ti-layout-dashboard', onClick: () => setTab('users'), active: tab === 'users' },
+    { label: 'Charities', icon: 'ti-building-community', onClick: () => setTab('charities'), active: tab === 'charities' },
+    { label: 'Donations', icon: 'ti-heart-handshake', onClick: () => setTab('reports'), active: tab === 'reports' },
+    { label: 'Users', icon: 'ti-users', onClick: () => setTab('users'), active: tab === 'users' },
+    { label: 'Requests', icon: 'ti-clipboard-list', onClick: () => setTab('charities'), active: false },
+    { label: 'Settings', icon: 'ti-settings', onClick: () => setTab('automation'), active: tab === 'automation' },
+  ];
+  const searchTerm = adminSearch.trim().toLowerCase();
+  const filteredUsers = searchTerm
+    ? users.filter(u => [u.userName, u.email, u.phone, u.roleType].some(v => String(v || '').toLowerCase().includes(searchTerm)))
+    : users;
+  const filteredCharities = searchTerm
+    ? charities.filter(c => [c.charityName, c.email, c.phone, c.address, c.status].some(v => String(v || '').toLowerCase().includes(searchTerm)))
+    : charities;
+  const filteredReports = searchTerm
+    ? reports.filter(r => String(r.description || '').toLowerCase().includes(searchTerm))
+    : reports;
 
   const setEditField = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setEditForm(f => ({ ...f, [k]: e.target.value }));
@@ -234,26 +254,76 @@ export default function AdminPanel() {
   ].filter(d => d.value > 0);
 
   return (
-    <div className="dashboard-wrapper">
+    <div className={`dashboard-wrapper admin-shell${sidebarCollapsed ? ' is-collapsed' : ''}`}>
+      <aside className="admin-sidebar" aria-label="Admin navigation">
+        <div className="admin-sidebar-brand">
+          <div className="admin-brand-mark">A</div>
+          <div className="admin-brand-copy">
+            <strong>Ataa</strong>
+            <span>Charity OS</span>
+          </div>
+        </div>
+        <nav className="admin-sidebar-nav">
+          {sideItems.map(item => (
+            <button key={item.label} type="button" className={`admin-nav-item${item.active ? ' active' : ''}`} onClick={item.onClick} title={item.label}>
+              <i className={`ti ${item.icon}`} />
+              <span>{item.label}</span>
+            </button>
+          ))}
+        </nav>
+        <div className="admin-sidebar-foot">
+          <span className="admin-health-dot" />
+          <span>System online</span>
+        </div>
+      </aside>
+
+      <div className="admin-main">
       {/* Top Bar */}
       <div className="dash-topbar">
         <div className="dash-topbar-inner">
           <div className="dash-topbar-left">
-            <div className="dash-topbar-icon">🛡️</div>
+            <button className="admin-icon-btn" type="button" onClick={() => setSidebarCollapsed(v => !v)} aria-label="Toggle sidebar">
+              <i className="ti ti-layout-sidebar-left-collapse" />
+            </button>
             <div>
               <h1>لوحة تحكم المسؤول</h1>
               <p>مرحبًا، {user.userName} — إدارة المنصة بالكامل</p>
             </div>
           </div>
-          <div className="dash-topbar-date">
+          <div className="admin-navbar-actions">
+            <label className="admin-search">
+              <i className="ti ti-search" />
+              <input
+                value={adminSearch}
+                onChange={e => setAdminSearch(e.target.value)}
+                placeholder="Search users, charities..."
+              />
+            </label>
+            <button className="admin-icon-btn" type="button" aria-label="Notifications">
+              <i className="ti ti-bell" />
+              <span className="admin-notification-dot" />
+            </button>
+            <div className="admin-profile-menu">
+              <button className="admin-profile-trigger" type="button">
+                <span>{user.userName?.[0]?.toUpperCase() || 'A'}</span>
+                <i className="ti ti-chevron-down" />
+              </button>
+              <div className="admin-profile-dropdown">
+                <strong>{user.userName}</strong>
+                <Link href="/settings">Settings</Link>
+                <Link href="/">Home</Link>
+              </div>
+            </div>
+            <div className="dash-topbar-date">
             {new Date().toLocaleDateString('ar-EG', {
               weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
             })}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="dash-body">
+      <div className="dash-body admin-content">
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
           {[
@@ -335,7 +405,7 @@ export default function AdminPanel() {
             {/* ══ USERS ══ */}
             {tab === 'users' && (
               <div className="dash-table-wrap">
-                {users.length === 0 ? (
+                {filteredUsers.length === 0 ? (
                   <div className="empty-state"><div className="empty-icon">👥</div><p>لا يوجد مستخدمون</p></div>
                 ) : (
                   <table className="dash-table">
@@ -350,7 +420,7 @@ export default function AdminPanel() {
                       </tr>
                     </thead>
                     <tbody>
-                      {users.map(u => (
+                      {filteredUsers.map(u => (
                         <tr key={u._id}>
                           <td><strong>{u.userName}</strong></td>
                           <td style={{ fontSize: 13 }}>{u.email}</td>
@@ -424,7 +494,7 @@ export default function AdminPanel() {
                   </div>
                 )}
 
-                {charities.length === 0 ? (
+                {filteredCharities.length === 0 ? (
                   <div className="empty-state"><div className="empty-icon">🏛️</div><p>لا توجد جمعيات</p></div>
                 ) : (
                   <table className="dash-table">
@@ -440,7 +510,7 @@ export default function AdminPanel() {
                       </tr>
                     </thead>
                     <tbody>
-                      {[...charities].sort((a, b) => {
+                      {[...filteredCharities].sort((a, b) => {
                         const o: Record<string, number> = { pending: 0, approved: 1, rejected: 2 };
                         return (o[a.status] ?? 1) - (o[b.status] ?? 1);
                       }).map(c => (
@@ -513,11 +583,11 @@ export default function AdminPanel() {
             {/* ══ REPORTS ══ */}
             {tab === 'reports' && (
               <div className="dash-table-wrap">
-                {reports.length === 0 ? (
+                {filteredReports.length === 0 ? (
                   <div className="empty-state"><div className="empty-icon">🚨</div><p>لا توجد تقارير</p></div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                    {reports.map((r, i) => (
+                    {filteredReports.map((r, i) => (
                       <div key={r._id}
                         style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 10, padding: '16px 20px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
@@ -638,6 +708,7 @@ export default function AdminPanel() {
             )}
           </>
         )}
+      </div>
       </div>
     </div>
   );

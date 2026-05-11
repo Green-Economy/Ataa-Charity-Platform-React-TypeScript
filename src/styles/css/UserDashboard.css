@@ -807,3 +807,173 @@
   .ud-stats { grid-template-columns: repeat(2, 1fr); }
   .ud-hero-right { display: none; }
 }
+
+/* SaaS refresh: calmer blue/gray dashboard language */
+.ud-root {
+  --br: #2563eb;
+  --br-dk: #1d4ed8;
+  --br-lt: rgba(37, 99, 235, .14);
+  --br-pale: rgba(37, 99, 235, .08);
+  --br-xpale: rgba(37, 99, 235, .045);
+  --t1: #0f172a;
+  --t2: #475569;
+  --t3: #94a3b8;
+  --bd: #e5eaf2;
+  --bd2: #d8e0eb;
+  --bg-sb: #f6f8fb;
+  --bg-user: #eef2f7;
+  --r-sm: 8px;
+  --r-md: 8px;
+  --r-lg: 8px;
+  --r-xl: 12px;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, .04);
+  --shadow-md: 0 12px 30px rgba(15, 23, 42, .08);
+  --shadow-lg: 0 24px 55px rgba(15, 23, 42, .12);
+  --shadow-br: 0 12px 24px rgba(37, 99, 235, .14);
+}
+
+.ud-topbar {
+  height: 60px;
+  padding: 0 24px;
+  border-bottom-color: var(--bd);
+  box-shadow: 0 1px 2px rgba(15,23,42,.03);
+}
+
+.ud-brand-ico,
+.ud-hero-btn,
+.ud-empty-btn,
+.ud-quick-btn.primary {
+  background: var(--br);
+  border-radius: 8px;
+}
+
+.ud-topbar-av,
+.ud-hero-av {
+  background: #0f172a;
+}
+
+.ud-hero {
+  padding: 24px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.ud-hero-inner,
+.ud-content {
+  max-width: 1280px;
+}
+
+.ud-content {
+  padding-top: 24px;
+}
+
+.ud-stat,
+.ud-pie-card,
+.ud-bar-card,
+.ud-card,
+.ud-greet,
+.ud-modal {
+  border-radius: 8px;
+  border-color: var(--bd);
+  box-shadow: var(--shadow-sm);
+}
+
+.ud-stat:hover,
+.ud-card:hover,
+.ud-pie-card:hover,
+.ud-bar-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: #c7d2fe;
+}
+
+.ud-card-header,
+.ud-pie-card .ud-card-header,
+.ud-modal-hd {
+  background: #f8fafc;
+}
+
+.ud-top-row,
+.ud-mid-row {
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.ud-stats {
+  gap: 16px;
+}
+
+.ud-stat {
+  min-height: 136px;
+  padding: 18px;
+}
+
+.ud-stat-ico,
+.ud-type-ico,
+.ud-empty-ico,
+.ud-modal-icon {
+  border-radius: 8px;
+}
+
+.ud-search,
+.ud-date-pill,
+.ud-quick-btn,
+.ud-qty,
+.ud-charity-tag,
+.ud-status {
+  border-radius: 8px;
+}
+
+.ud-tabs {
+  padding: 12px 18px;
+  gap: 8px;
+}
+
+.ud-tab {
+  border-radius: 8px;
+  transition: all .18s ease;
+}
+
+.ud-tab.active {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #fff;
+}
+
+.ud-tbl th {
+  letter-spacing: 0;
+  background: #f8fafc;
+}
+
+.ud-tbl td {
+  border-color: #eef2f7;
+}
+
+@media (max-width: 900px) {
+  .ud-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .ud-topbar,
+  .ud-hero {
+    padding-inline: 16px;
+  }
+  .ud-hero-inner {
+    align-items: flex-start;
+  }
+  .ud-hero-right {
+    width: 100%;
+  }
+  .ud-hero-btn,
+  .ud-date-pill {
+    flex: 1;
+    justify-content: center;
+  }
+  .ud-card,
+  .ud-stat,
+  .ud-greet,
+  .ud-pie-card,
+  .ud-bar-card {
+    border-radius: 8px;
+  }
+}

@@ -1957,7 +1957,7 @@ function LoginModal({
     setLoading(true);
     try {
       const res = await authApi.login({ email, password });
-      if (!res.tokens?.accessToken || !res.tokens?.refreshToken) {
+      if (!res.tokens?.accessToken) {
         throw new Error('بيانات التوكن غير كاملة');
       }
       await login(res.tokens.accessToken, res.tokens.refreshToken, res.user);
@@ -2256,9 +2256,10 @@ function SignupModal({ onClose, onSwitch }: { onClose: () => void; onSwitch: () 
       const res = await authApi.login({ email: form.email, password: form.password });
       setSuccess('🎉 تم تأكيد حسابك بنجاح! جاري تحويلك...');
       setTimeout(() => {
-        login(res.tokens.accessToken, res.tokens.refreshToken, res.user);
+        login(res.tokens.accessToken, res.tokens.refreshToken, res.user).then(loggedUser => {
+          setLocation(getRedirectByRole(loggedUser?.roleType || res.user?.roleType || 'user'));
+        });
         onClose();
-        setLocation(getRedirectByRole(res.user.roleType));
       }, 1200);
     } catch (err: unknown) {
       setServerError(err instanceof Error ? err.message : 'حدث خطأ، حاول تسجيل الدخول يدوياً');

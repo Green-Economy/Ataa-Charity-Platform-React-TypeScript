@@ -5,7 +5,7 @@ interface AuthContextType {
   user: any;
   isLoading: boolean;
   isLoggedIn: boolean;
-  login: (accessToken: string, refreshToken: string, userData?: any) => Promise<void>;
+  login: (accessToken: string, refreshToken?: string, userData?: any) => Promise<any>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -24,8 +24,54 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   // ✅ دالة واحدة فقط لاستخراج الـ user من أي format يرجعه الـ Backend
+  const decodeJwtPayload = useCallback((token: string): any => {
+    try {
+      const [, payload] = token.split('.');
+      if (!payload) return null;
+      const normalized = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const json = decodeURIComponent(
+        atob(normalized)
+          .split('')
+          .map(char => `%${(`00${char.charCodeAt(0).toString(16)}`).slice(-2)}`)
+          .join('')
+      );
+      return JSON.parse(json);
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const normalizeRole = useCallback((role: any): 'user' | 'charity' | 'admin' => {
+    const normalized = String(role || '').toLowerCase().trim().replace(/\s+/g, '');
+    if (normalized === 'admin' || normalized === 'مدير') return 'admin';
+    if (normalized === 'charity' || normalized === 'charityorganization' || normalized === 'جمعية') return 'charity';
+    return 'user';
+  }, []);
+
+  const normalizeUser = useCallback((userData: any, token?: string): any => {
+    if (!userData && !token) return null;
+    const tokenData = token ? decodeJwtPayload(token) : null;
+    const merged = { ...(tokenData || {}), ...(userData || {}) };
+    return {
+      ...merged,
+      _id: merged._id || merged.id || merged.userId,
+      roleType: normalizeRole(merged.roleType || merged.role || merged.userRole || merged.type),
+    };
+  }, [decodeJwtPayload, normalizeRole]);
+
   const extractUser = useCallback((data: any): any => {
-    return data?.user || data?.finder || data?.data || data?.result || null;
+    return (
+      data?.user ||
+      data?.finder ||
+      data?.account ||
+      data?.data?.user ||
+      data?.data?.finder ||
+      data?.result?.user ||
+      data?.result?.finder ||
+      data?.data ||
+      data?.result ||
+      null
+    );
   }, []);
 
   // ✅ عند أول تحميل — لو في توكن محفوظ جيب بيانات المستخدم
@@ -43,11 +89,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         if (userData) {
           // ✅ نقبل الـ user حتى لو roleType مش موجود — نستخدم 'user' كـ default
-          const normalizedUser = {
-            ...userData,
-            roleType: userData.roleType || userData.role || 'user'
-          };
+          const normalizedUser = normalizeUser(userData, token);
           setUser(normalizedUser);
+        } else if (decodeJwtPayload(token)) {
+          setUser(normalizeUser(null, token));
         } else {
           // لو مرجعش بيانات خالص، احذف التوكن
           console.warn('⚠️ initAuth: no user data returned, clearing tokens');
@@ -64,22 +109,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     
     initAuth();
-  }, [extractUser]);
+  }, [decodeJwtPayload, extractUser, normalizeUser]);
 
   // ✅ دالة اللوجين — واحدة فقط
-  const login = async (accessToken: string, refreshToken: string, userData?: any) => {
+  const login = async (accessToken: string, refreshToken?: string, userData?: any) => {
     // ✅ أول حاجة نخزن التوكنات
     localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
+    if (refreshToken) {
+      localStorage.setItem('refreshToken', refreshToken);
+    } else {
+      localStorage.removeItem('refreshToken');
+    }
 
     // لو جاي بيانات المستخدم من برا، استخدمها فورًا بدون ما نطلب البروفايل
     if (userData) {
-      const normalizedUser = {
-        ...userData,
-        roleType: userData.roleType || userData.role || 'user'
-      };
+      const normalizedUser = normalizeUser(userData, accessToken);
       setUser(normalizedUser);
-      return;
+      return normalizedUser;
     }
 
     // لو مفيش بيانات، اطلب البروفايل من الـ API
@@ -88,16 +134,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const fetchedUser = extractUser(d);
       
       if (fetchedUser) {
-        const normalizedUser = {
-          ...fetchedUser,
-          roleType: fetchedUser.roleType || fetchedUser.role || 'user'
-        };
+        const normalizedUser = normalizeUser(fetchedUser, accessToken);
         setUser(normalizedUser);
+        return normalizedUser;
       }
     } catch (error) {
       console.error('❌ Login: Failed to fetch full profile after login', error);
       // ✅ مش نحذف التوكن — التوكن اتخزن صح، مشكلة في جلب البروفايل بس
     }
+
+    const tokenUser = normalizeUser(null, accessToken);
+    if (tokenUser) {
+      setUser(tokenUser);
+      return tokenUser;
+    }
+
+    return null;
   };
 
   // ✅ دالة اللوجاوت
@@ -113,10 +165,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const d = await usersApi.getProfile();
       const userData = extractUser(d);
       if (userData) {
-        const normalizedUser = {
-          ...userData,
-          roleType: userData.roleType || userData.role || 'user'
-        };
+        const normalizedUser = normalizeUser(userData, localStorage.getItem('accessToken') || undefined);
         setUser(normalizedUser);
       }
     } catch (error) {

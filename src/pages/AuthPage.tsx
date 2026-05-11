@@ -1606,11 +1606,11 @@ function LoginSection({ onSwitch, onForgot, onToast }: LoginSectionProps) {
     setLoading(true);
     try {
       const res = await authApi.login({ email: email.trim(), password });
-      if (!res.tokens?.accessToken || !res.tokens?.refreshToken)
+      if (!res.tokens?.accessToken)
         throw new Error('بيانات التوكن غير مكتملة');
-      await login(res.tokens.accessToken, res.tokens.refreshToken, res.user);
+      const loggedUser = await login(res.tokens.accessToken, res.tokens.refreshToken, res.user);
       onToast('تم تسجيل الدخول بنجاح 🎉', 'success');
-      setLocation(getRedirectByRole(res.user?.roleType || 'user'));
+      setLocation(getRedirectByRole(loggedUser?.roleType || res.user?.roleType || 'user'));
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'خطأ في البيانات';
       // ✅ Toast لأخطاء السيرفر
