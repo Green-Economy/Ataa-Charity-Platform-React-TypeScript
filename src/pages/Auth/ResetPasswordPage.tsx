@@ -39,7 +39,7 @@ export default function ForgotPasswordModal({ onClose, onSwitchToLogin }: Props)
     if (eErr) { setEmailErr(eErr); return; }
     setLoading(true);
     try {
-      await authApi.forgetPassword({ email });
+      await authApi.forgotPassword({ email });
       setStep('code');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'حدث خطأ');

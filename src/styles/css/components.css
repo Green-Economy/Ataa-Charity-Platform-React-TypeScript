@@ -175,3 +175,24 @@
 .notif-drop-empty  { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px; color: var(--neutral-500); font-size: 13px; gap: 8px; }
 .notif-drop-footer { width: 100%; padding: 12px; background: var(--neutral-50); border-top: 1px solid var(--neutral-100); font-size: 13px; font-weight: 700; color: var(--teal-600); text-align: center; cursor: pointer; transition: background .15s; border: none; }
 .notif-drop-footer:hover { background: var(--teal-50); }
+/* ── AI Chat Nav Button ─────────────────────────────────────── */
+.nav-ai-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: var(--r-full);
+  background: linear-gradient(135deg, var(--teal-600), var(--teal-500));
+  color: var(--white) !important; font-size: 13px; font-weight: 700;
+  transition: all .2s; box-shadow: 0 2px 8px rgba(46,142,152,.3);
+  text-decoration: none;
+}
+.nav-ai-btn:hover {
+  background: linear-gradient(135deg, var(--teal-700), var(--teal-600));
+  box-shadow: 0 4px 12px rgba(46,142,152,.4);
+  transform: translateY(-1px);
+}
+.nav-ai-label { font-size: 13px; }
+
+/* ── Chat Full-Screen Layout ────────────────────────────────── */
+.chat-layout-root {
+  display: flex; flex-direction: column;
+  height: 100vh; width: 100vw; overflow: hidden;
+}

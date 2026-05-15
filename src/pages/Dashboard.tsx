@@ -6,7 +6,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
 } from 'recharts';
 import PageLoader from '../components/ui/Pageloader';
-import DonationDetail from './DonationDetail';
+import DonationDetail from './Donationdetail';
 import '../styles/css/CharityDashboard.css';
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

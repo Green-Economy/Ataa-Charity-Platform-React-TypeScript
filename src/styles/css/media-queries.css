@@ -74,3 +74,58 @@
   .otp-wrap           { gap: 6px; }
   .otp-digit          { width: 40px; height: 50px; font-size: 18px; }
 }
+
+/* ── Large Desktop (≥ 1280px) ── */
+@media (min-width: 1280px) {
+  :root {
+    --container-max: 1180px;
+    --section-pad: 112px 5%;
+  }
+  .charity-cards    { grid-template-columns: repeat(3, 1fr); }
+  .charities-grid   { grid-template-columns: repeat(3, 1fr); }
+  .footer-body      { max-width: 1180px; }
+}
+
+/* ── Extra Small (≤ 480px) ── */
+@media (max-width: 480px) {
+  :root { --section-pad: 48px 4%; }
+
+  /* Navbar */
+  .nav-inner         { width: 94%; }
+
+  /* Hero */
+  .hero-title        { font-size: clamp(26px, 8vw, 36px); }
+  .hero-desc         { font-size: 15px; }
+  .hero-stats        { flex-direction: column; gap: 16px; }
+
+  /* Steps */
+  .how-steps         { grid-template-columns: 1fr; gap: 24px; }
+
+  /* Auth */
+  .role-picker       { grid-template-columns: 1fr; }
+
+  /* Footer */
+  .footer-body       { padding: 28px 16px 16px; gap: 24px; }
+  .footer-bottom     { padding: 12px; gap: 8px; }
+
+  /* Donations page */
+  .otp-wrap          { gap: 4px; }
+  .otp-digit         { width: 36px; height: 46px; font-size: 16px; }
+
+  /* Nav AI button — hide label on tiny screens */
+  .nav-ai-label      { display: none; }
+}
+
+/* ── Landscape Mobile (max-height: 500px) ── */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero              { min-height: auto; padding: 60px 0; }
+  .mobile-nav        { max-height: 80vh; overflow-y: auto; }
+}
+
+/* ── Prevent horizontal overflow globally ── */
+@media (max-width: 600px) {
+  body               { overflow-x: hidden; }
+  .hero-inner        { padding: 60px 0; }
+  .step-card         { padding: 24px 18px; }
+  .charity-card-img  { height: 160px; }
+}

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useLocation } from 'wouter';
 import { aiApi } from '../services';
 import { useAuth } from '../contexts/AuthContext';
-import '../styles/css/AIChat.css';
+import '../styles/css/AiChat.css';
 
 interface Message {
   role: 'user' | 'bot';

@@ -1,0 +1,572 @@
+/* ─── CSS Variables ──────────────────────────────────────────────────────────── */
+.lp-body {
+  --lp-teal-900: #0d3d3f;
+  --lp-teal-800: #164e52;
+  --lp-teal-700: #1e6268;
+  --lp-teal-600: #267880;
+  --lp-teal-500: #2e8e98;
+  --lp-teal-400: #3ba8b4;
+  --lp-teal-100: #d0eff2;
+  --lp-teal-50:  #eaf8f9;
+  --lp-gold-600: #b8920a;
+  --lp-gold-500: #c9a227;
+  --lp-gold-400: #d4af37;
+  --lp-success:        #22c55e;
+  --lp-success-bg:     #f0fdf4;
+  --lp-success-border: #86efac;
+  --lp-error:          #ef4444;
+  --lp-error-bg:       #fff1f2;
+  --lp-error-border:   #fca5a5;
+  --lp-neutral-900: #111827;
+  --lp-neutral-700: #374151;
+  --lp-neutral-500: #6b7280;
+  --lp-neutral-300: #d1d5db;
+  --lp-neutral-200: #e5e7eb;
+  --lp-neutral-100: #f3f4f6;
+  --lp-neutral-50:  #f9fafb;
+  --lp-white: #ffffff;
+  --lp-font: 'Tajawal', sans-serif;
+  --lp-r-sm:   8px;
+  --lp-r-md:   14px;
+  --lp-r-full: 9999px;
+  --lp-transition: 0.6s;
+  --lp-shadow-lg: 0 15px 40px rgba(13, 61, 63, 0.15);
+}
+
+/* ─── Animations ─────────────────────────────────────────────────────────────── */
+@keyframes lp-toastSlide {
+  from { opacity: 0; transform: translateX(80px) scale(0.9); }
+  to   { opacity: 1; transform: translateX(0)    scale(1); }
+}
+@keyframes lp-scar {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(10%); }
+}
+@keyframes lp-sca {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10%); }
+}
+@keyframes lp-shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+@keyframes lp-slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes lp-fadeInDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes lp-checkPop {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+@keyframes lp-pulse {
+  0%, 100% { transform: scale(1);    opacity: 0.7; }
+  50%      { transform: scale(1.15); opacity: 0.3; }
+}
+@keyframes lp-barFill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* ─── Body ───────────────────────────────────────────────────────────────────── */
+.lp-body {
+  font-family: var(--lp-font);
+  background: linear-gradient(135deg, var(--lp-teal-50), var(--lp-neutral-50));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  direction: rtl;
+  position: relative;
+}
+.lp-body::before {
+  content: '';
+  width: 100%; height: 100%;
+  position: absolute;
+  background: linear-gradient(to right, var(--lp-teal-900), var(--lp-teal-100));
+  clip-path: circle(30% at left top);
+  animation: lp-sca 2s infinite;
+  pointer-events: none;
+}
+.lp-body::after {
+  content: '';
+  width: 100%; height: 100%;
+  position: absolute;
+  background-color: var(--lp-teal-600);
+  clip-path: circle(30% at right bottom);
+  animation: lp-scar 2s infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ─── Home Button ────────────────────────────────────────────────────────────── */
+.lp-home-btn {
+  position: fixed; top: 16px; right: 16px; z-index: 9999;
+  background: #1a1a1a;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  border-radius: var(--lp-r-full);
+  padding: 9px 18px 9px 14px;
+  color: #fff;
+  font-family: var(--lp-font);
+  font-size: 14px; font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  transition: background 0.2s, transform 0.15s;
+}
+.lp-home-btn:hover { background: #000; transform: translateY(-1px); }
+
+/* ─── Container ──────────────────────────────────────────────────────────────── */
+.lp-container {
+  position: relative;
+  width: 900px; max-width: 95%;
+  height: 600px;
+  background: var(--lp-white);
+  border-radius: 20px;
+  box-shadow: var(--lp-shadow-lg);
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* ─── Forms Container ────────────────────────────────────────────────────────── */
+.lp-forms-container {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  transition: transform var(--lp-transition) ease-in-out;
+}
+.lp-form-wrapper {
+  width: 50%;
+  padding: 28px 32px;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center;
+  background: var(--lp-white);
+  overflow: hidden;
+  height: 100%;
+}
+.lp-register-form {
+  justify-content: flex-start;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.lp-register-form::-webkit-scrollbar { display: none; }
+
+/* ─── Role Selector ──────────────────────────────────────────────────────────── */
+.lp-role-selector   { width: 100%; }
+.lp-role-prompt     { font-size: 0.8em; color: var(--lp-neutral-500); margin: 0 0 10px; font-weight: 500; }
+.lp-role-cards      { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; }
+
+.lp-role-card {
+  position: relative;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 7px;
+  padding: 12px 7px 10px;
+  border: 2px solid var(--lp-neutral-200);
+  border-radius: 14px;
+  background: var(--lp-neutral-50);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  overflow: hidden;
+  font-family: var(--lp-font);
+}
+.lp-role-card:hover {
+  border-color: var(--card-color, var(--lp-teal-400));
+  background: color-mix(in srgb, var(--card-color, #3ba8b4) 6%, white);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--card-color, #3ba8b4) 22%, transparent);
+}
+.lp-role-card--selected {
+  border-color: var(--card-color, var(--lp-teal-400));
+  background: color-mix(in srgb, var(--card-color, #3ba8b4) 8%, white);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--card-color, #3ba8b4) 28%, transparent);
+}
+.lp-role-check {
+  position: absolute; top: 7px; left: 7px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--card-color, var(--lp-teal-400));
+  display: flex; align-items: center; justify-content: center;
+  animation: lp-checkPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.lp-role-check i { color: #fff; font-size: 9px; }
+
+.lp-role-icon-wrap {
+  width: 40px; height: 40px; border-radius: 11px;
+  background: var(--card-gradient, var(--lp-teal-600));
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--card-color, #3ba8b4) 38%, transparent);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.lp-role-card:hover .lp-role-icon-wrap,
+.lp-role-card--selected .lp-role-icon-wrap { transform: scale(1.1); }
+.lp-role-icon { color: #fff; font-size: 16px; }
+
+.lp-role-labels     { display: flex; flex-direction: column; gap: 1px; }
+.lp-role-label-ar   { font-size: 0.78em; font-weight: 800; color: var(--lp-neutral-900); line-height: 1.2; }
+.lp-role-label-en   { font-size: 0.6em; font-weight: 500; color: var(--lp-neutral-500); text-transform: uppercase; letter-spacing: 0.5px; }
+.lp-role-card--selected .lp-role-label-ar { color: var(--card-color, var(--lp-teal-600)); }
+
+.lp-role-features   { list-style: none; padding: 0; margin: 0; width: 100%; display: flex; flex-direction: column; gap: 2px; }
+.lp-role-features li { display: flex; align-items: flex-start; gap: 4px; text-align: right; font-size: 0.6em; color: #4b5563; line-height: 1.4; }
+.lp-feat-icon       { color: var(--card-color, var(--lp-teal-400)); font-size: 0.78em; margin-top: 2px; flex-shrink: 0; }
+
+.lp-role-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-gradient, var(--lp-teal-600));
+  transform: scaleX(0); transform-origin: center;
+  transition: transform 0.3s ease;
+  border-radius: 0 0 14px 14px;
+}
+.lp-role-card:hover .lp-role-bar,
+.lp-role-card--selected .lp-role-bar { transform: scaleX(1); }
+
+/* ─── Selected Role Badge ────────────────────────────────────────────────────── */
+.lp-selected-role-badge {
+  display: flex; align-items: center; gap: 8px;
+  border: 1.5px solid;
+  border-radius: var(--lp-r-full);
+  padding: 6px 12px;
+  font-size: 0.8em; margin-bottom: 10px;
+  width: 100%; box-sizing: border-box;
+}
+.lp-change-role-btn {
+  margin-right: auto;
+  background: none; border: none; cursor: pointer;
+  color: var(--lp-neutral-500);
+  font-size: 0.82em; font-family: var(--lp-font);
+  padding: 2px 8px;
+  border-radius: var(--lp-r-full);
+  transition: background 0.2s;
+}
+.lp-change-role-btn:hover { background: rgba(0,0,0,0.06); color: var(--lp-neutral-900); }
+
+/* ─── Section Divider ────────────────────────────────────────────────────────── */
+.lp-section-divider {
+  display: flex; align-items: center; gap: 10px;
+  margin: 6px 0 8px;
+  font-size: 0.73em; color: var(--lp-neutral-500); font-weight: 600;
+}
+.lp-section-divider::before,
+.lp-section-divider::after { content: ''; flex: 1; height: 1px; background: var(--lp-neutral-200); }
+
+/* ─── User Ready ─────────────────────────────────────────────────────────────── */
+.lp-user-ready-msg {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--lp-success-bg);
+  border: 1px solid var(--lp-success-border);
+  border-radius: 10px; padding: 9px 12px;
+  font-size: 0.8em; color: #166534; font-weight: 600;
+  margin: 3px 0 6px;
+}
+.lp-user-ready-msg i { color: var(--lp-success); }
+
+/* ─── Step Progress ──────────────────────────────────────────────────────────── */
+.lp-step-progress   { width: 100%; margin-bottom: 14px; }
+.lp-step-labels     { display: flex; justify-content: space-between; margin-bottom: 7px; }
+.lp-step-label      { font-size: 0.66em; color: var(--lp-neutral-500); flex: 1; text-align: center; transition: color 0.3s; }
+.lp-step-label.active { color: var(--lp-teal-600); font-weight: 700; }
+.lp-step-label.done   { color: var(--lp-success); font-weight: 600; }
+.lp-progress-track  { width: 100%; height: 4px; background: var(--lp-neutral-200); border-radius: var(--lp-r-full); overflow: hidden; }
+.lp-progress-fill   { height: 100%; background: linear-gradient(90deg, var(--lp-teal-600), var(--lp-teal-400)); border-radius: var(--lp-r-full); transition: width 0.4s cubic-bezier(0.4,0,0.2,1); }
+.lp-step-dots       { display: flex; justify-content: center; gap: 6px; margin-bottom: 8px; }
+.lp-step-dot        { width: 8px; height: 8px; border-radius: 50%; background: var(--lp-neutral-300); transition: all 0.3s; }
+.lp-step-dot.active { background: var(--lp-teal-600); width: 22px; border-radius: 4px; }
+.lp-step-dot.done   { background: var(--lp-success); }
+
+/* ─── Wizard ─────────────────────────────────────────────────────────────────── */
+.lp-wizard-steps    { width: 100%; }
+.lp-wizard-step     { width: 100%; animation: lp-slideIn 0.35s ease forwards; }
+
+/* ─── Section Title ──────────────────────────────────────────────────────────── */
+.lp-sec-title { font-size: 1.55em; color: var(--lp-teal-800); margin-bottom: 3px; font-weight: 800; }
+.lp-sec-sub   { font-size: 0.83em; color: var(--lp-neutral-500); margin-bottom: 12px; }
+
+/* ─── Input Group ────────────────────────────────────────────────────────────── */
+.lp-input-group { position: relative; width: 100%; margin-bottom: 7px; }
+.lp-field-input {
+  width: 100%;
+  padding: 10px 42px 10px 38px;
+  box-sizing: border-box;
+  border: 1.5px solid var(--lp-neutral-200);
+  border-radius: var(--lp-r-md);
+  font-family: var(--lp-font);
+  font-size: 0.87em;
+  color: var(--lp-neutral-900);
+  background: var(--lp-neutral-50);
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+  outline: none;
+  text-align: right;
+}
+.lp-field-input:focus {
+  border-color: var(--lp-teal-400);
+  background: var(--lp-white);
+  box-shadow: 0 0 0 3px rgba(59, 168, 180, 0.12);
+}
+.lp-field-input.lp-input-valid {
+  border-color: var(--lp-success-border);
+  background: var(--lp-success-bg);
+}
+.lp-field-input.lp-input-valid:focus {
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
+  border-color: var(--lp-success);
+}
+.lp-field-input.lp-input-invalid {
+  border-color: var(--lp-error-border);
+  background: var(--lp-error-bg);
+  animation: lp-shake 0.35s ease;
+}
+.lp-field-input.lp-input-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+  border-color: var(--lp-error);
+}
+.lp-field-input.lp-has-eye { padding-left: 62px; }
+
+.lp-field-icon {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--lp-teal-600); pointer-events: none; font-size: 0.85em;
+}
+.lp-status-icon {
+  position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+  font-size: 0.83em; pointer-events: none; opacity: 0;
+  transition: opacity 0.2s, color 0.2s;
+}
+.lp-field-input.lp-input-valid   ~ .lp-status-icon { opacity: 1; color: var(--lp-success); }
+.lp-field-input.lp-input-invalid ~ .lp-status-icon { opacity: 1; color: var(--lp-error); }
+
+.lp-eye-btn {
+  position: absolute; left: 32px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  padding: 0 4px; color: var(--lp-neutral-500); font-size: 0.86em; z-index: 2;
+}
+.lp-eye-btn:hover { color: var(--lp-teal-600); }
+
+/* ─── Field Hint ─────────────────────────────────────────────────────────────── */
+.lp-field-hint {
+  font-size: 0.71em; margin-top: 2px; padding: 0 3px;
+  min-height: 14px; text-align: right;
+  display: flex; align-items: center; gap: 4px;
+  margin-bottom: 2px;
+}
+.lp-hint-error   { color: var(--lp-error); }
+.lp-hint-success { color: var(--lp-success); }
+
+/* ─── Password Strength ──────────────────────────────────────────────────────── */
+.lp-password-strength { width: 100%; margin-top: -1px; margin-bottom: 5px; }
+.lp-strength-track    { height: 3px; background: var(--lp-neutral-200); border-radius: var(--lp-r-full); overflow: hidden; margin-bottom: 3px; }
+.lp-strength-fill     { height: 100%; border-radius: var(--lp-r-full); transition: width 0.3s, background-color 0.3s; }
+.lp-strength-text     { font-size: 0.68em; text-align: right; }
+
+/* ─── Conditional Field ──────────────────────────────────────────────────────── */
+.lp-conditional-field { width: 100%; }
+.lp-show { display: block; animation: lp-fadeInDown 0.3s ease; }
+
+/* ─── Buttons ────────────────────────────────────────────────────────────────── */
+.lp-full-width { width: 100%; }
+
+.lp-btn-primary {
+  background: var(--lp-teal-600); color: #fff;
+  padding: 11px; border-radius: var(--lp-r-full);
+  font-family: var(--lp-font); font-size: 0.9em; font-weight: 700;
+  border: none; cursor: pointer;
+  transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.lp-btn-primary:hover:not(:disabled) {
+  background: var(--lp-teal-700);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(38, 120, 128, 0.3);
+}
+.lp-btn-primary:disabled { opacity: 0.65; cursor: not-allowed; }
+
+.lp-btn-gold {
+  background: linear-gradient(135deg, var(--lp-gold-500), var(--lp-gold-400)); color: #fff;
+  padding: 11px; border-radius: var(--lp-r-full);
+  font-family: var(--lp-font); font-size: 0.9em; font-weight: 700;
+  border: none; cursor: pointer;
+  transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.lp-btn-gold:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 162, 39, 0.35);
+}
+.lp-btn-gold:disabled { opacity: 0.65; cursor: not-allowed; }
+
+.lp-btn-outline {
+  background: transparent; color: var(--lp-teal-700);
+  padding: 9px; border-radius: var(--lp-r-full);
+  font-family: var(--lp-font); font-size: 0.86em; font-weight: 600;
+  border: 1.5px solid var(--lp-teal-400);
+  cursor: pointer; transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.lp-btn-outline:hover { background: var(--lp-teal-50); border-color: var(--lp-teal-600); }
+
+/* ─── Wizard Nav ─────────────────────────────────────────────────────────────── */
+.lp-wizard-nav { display: flex; gap: 10px; width: 100%; margin-top: 6px; }
+.lp-wizard-nav .lp-btn-outline { flex: 1; }
+.lp-wizard-nav .lp-btn-gold    { flex: 2; }
+
+/* ─── Forgot Password ────────────────────────────────────────────────────────── */
+.lp-forgot-password {
+  color: var(--lp-teal-600); font-size: 0.79em; text-decoration: none;
+  margin-bottom: 12px; display: block; width: 100%; text-align: left;
+  transition: color 0.2s; cursor: pointer;
+}
+.lp-forgot-password:hover { color: var(--lp-teal-800); text-decoration: underline; }
+
+/* ─── Social ─────────────────────────────────────────────────────────────────── */
+.lp-social-text  { margin: 11px 0 8px; color: var(--lp-neutral-500); font-size: 0.79em; }
+.lp-social-icons { display: flex; gap: 10px; justify-content: center; }
+.lp-social-icon  {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1.5px solid var(--lp-neutral-200);
+  display: flex; justify-content: center; align-items: center;
+  color: var(--lp-neutral-700); text-decoration: none;
+  transition: 0.25s; font-size: 0.9em;
+}
+.lp-social-icon:hover {
+  background: var(--lp-teal-50); border-color: var(--lp-teal-400);
+  color: var(--lp-teal-600); transform: translateY(-2px);
+}
+
+/* ─── Welcome Screen ─────────────────────────────────────────────────────────── */
+.lp-welcome-screen {
+  width: 100%; display: flex; flex-direction: column;
+  align-items: center; gap: 14px; padding: 20px 8px;
+  animation: lp-slideIn 0.4s ease forwards;
+}
+.lp-welcome-avatar {
+  position: relative; width: 72px; height: 72px; border-radius: 50%;
+  background: var(--lp-neutral-100);
+  display: flex; align-items: center; justify-content: center; font-size: 28px;
+}
+.lp-welcome-pulse {
+  position: absolute; inset: -8px; border-radius: 50%;
+  animation: lp-pulse 1.5s ease-in-out infinite;
+}
+.lp-welcome-text     { text-align: center; }
+.lp-welcome-greeting { display: block; font-size: 0.85em; color: var(--lp-neutral-500); margin-bottom: 4px; }
+.lp-welcome-name     { font-size: 1.5em; font-weight: 800; color: var(--lp-teal-800); margin: 0; }
+.lp-welcome-role-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1.5px solid; border-radius: var(--lp-r-full);
+  padding: 7px 18px; font-size: 0.88em; font-weight: 700;
+}
+.lp-welcome-msg      { font-size: 0.85em; color: var(--lp-neutral-500); margin: 0; }
+.lp-welcome-bar-track { width: 100%; height: 4px; background: var(--lp-neutral-200); border-radius: var(--lp-r-full); overflow: hidden; }
+.lp-welcome-bar-fill  { height: 100%; border-radius: var(--lp-r-full); animation: lp-barFill 2.2s linear forwards; }
+
+/* ─── Side Panel ─────────────────────────────────────────────────────────────── */
+.lp-side-panel {
+  position: absolute; top: 0; right: 0;
+  width: 50%; height: 100%;
+  background: linear-gradient(150deg, var(--lp-teal-800) 0%, var(--lp-teal-600) 60%, var(--lp-teal-500) 100%);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 0 28px;
+  z-index: 100;
+  transition: transform var(--lp-transition) ease-in-out;
+  border-bottom-left-radius: 30%;
+  border-top-left-radius: 30%;
+}
+.lp-panel-content    { position: relative; width: 100%; }
+.lp-panel-content h1 { font-size: 1.75em; margin-bottom: 10px; font-weight: 800; }
+.lp-panel-content p  { font-size: 0.87em; margin-bottom: 20px; opacity: 0.88; line-height: 1.6; }
+
+.lp-ghost-btn {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  color: #fff; padding: 10px 26px;
+  border-radius: var(--lp-r-full);
+  font-family: var(--lp-font); font-weight: 700;
+  cursor: pointer; transition: 0.25s; font-size: 0.92em;
+}
+.lp-ghost-btn:hover { background: #fff; color: var(--lp-teal-700); }
+
+.lp-panel-register-mode { position: absolute; opacity: 0; visibility: hidden; transition: 0.4s; }
+
+.lp-container.active .lp-side-panel {
+  transform: translateX(-100%);
+  border-radius: 0;
+  border-bottom-right-radius: 30%;
+  border-top-right-radius: 30%;
+}
+.lp-container.active .lp-panel-login-mode    { opacity: 0; visibility: hidden; }
+.lp-container.active .lp-panel-register-mode { opacity: 1; visibility: visible; }
+
+/* ─── Toast ──────────────────────────────────────────────────────────────────── */
+.lp-toast-wrap {
+  position: fixed; top: 20px; right: 20px; z-index: 99999;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  width: 340px;
+  font-family: var(--lp-font); direction: rtl; overflow: hidden;
+  animation: lp-toastSlide 0.45s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+.lp-toast-inner   { padding: 14px 16px 12px; }
+.lp-toast-row     { display: flex; align-items: center; gap: 10px; }
+.lp-toast-icon-wrap {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.lp-toast-msg     { margin: 0; flex: 1; font-size: 13.5px; font-weight: 600; line-height: 1.55; }
+.lp-toast-close   {
+  background: none; border: none; cursor: pointer;
+  color: #9ca3af; font-size: 13px;
+  width: 26px; height: 26px; border-radius: 8px;
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+}
+.lp-toast-bar-track { height: 3px; }
+.lp-toast-bar-fill  { height: 100%; transition: width 0.05s linear; border-radius: 0 2px 2px 0; }
+
+/* ─── Responsive ─────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .lp-body { overflow-y: auto; padding: 60px 0 20px; align-items: flex-start; }
+  .lp-home-btn { top: 12px; right: 12px; padding: 8px 14px; font-size: 13px; }
+  .lp-container { width: 95%; height: auto; min-height: unset; }
+  .lp-side-panel {
+    position: relative; width: 100%; height: auto; padding: 22px;
+    border-radius: 15px 15px 0 0; transform: none !important; order: 1;
+  }
+  .lp-forms-container { position: relative; width: 100%; transform: none !important; order: 2; height: auto; overflow: visible; }
+  .lp-form-wrapper    { width: 100%; padding: 18px 14px; height: auto; overflow-y: visible; }
+  .lp-register-form   { overflow-y: visible; display: none; }
+  .lp-container.active .lp-login-form    { display: none; }
+  .lp-container.active .lp-register-form { display: flex; }
+  .lp-panel-register-mode { opacity: 0; visibility: hidden; }
+  .lp-container.active .lp-panel-register-mode { opacity: 1; visibility: visible; }
+  .lp-panel-login-mode { opacity: 1; visibility: visible; }
+  .lp-container.active .lp-panel-login-mode { opacity: 0; visibility: hidden; }
+  .lp-wizard-nav { flex-direction: column-reverse; }
+  .lp-wizard-nav .lp-btn-outline,
+  .lp-wizard-nav .lp-btn-gold { flex: none; width: 100%; }
+  .lp-role-cards { grid-template-columns: 1fr; gap: 7px; }
+  .lp-role-card  { flex-direction: row; padding: 11px 13px; text-align: right; gap: 11px; align-items: center; }
+  .lp-role-features { display: none; }
+  .lp-role-icon-wrap { width: 38px; height: 38px; flex-shrink: 0; }
+  .lp-role-icon  { font-size: 15px; }
+  .lp-role-labels { align-items: flex-start; }
+  .lp-role-bar {
+    width: 3px; height: auto; right: auto; top: 0; left: 0; bottom: 0;
+    transform: scaleY(0); transform-origin: center;
+    border-radius: 14px 0 0 14px;
+  }
+  .lp-role-card:hover .lp-role-bar,
+  .lp-role-card--selected .lp-role-bar { transform: scaleY(1); }
+}
+@media (max-width: 420px) {
+  .lp-home-btn-text { display: none; }
+  .lp-home-btn { padding: 9px 12px; }
+}

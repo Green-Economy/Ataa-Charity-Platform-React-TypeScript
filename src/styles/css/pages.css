@@ -656,3 +656,29 @@
 .notif-action-btn    { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--neutral-200); background: var(--white); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--neutral-500); cursor: pointer; transition: all .2s; }
 .notif-action-btn:hover  { background: var(--teal-50); color: var(--teal-600); border-color: var(--teal-300); }
 .notif-action-btn.danger:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+
+/* ═══════════════════════════════════════════
+   PAGE — 404 Not Found
+═══════════════════════════════════════════ */
+.notfound {
+  min-height: calc(100vh - 64px);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 40px 20px;
+  background: var(--neutral-50);
+}
+.notfound h1 {
+  font-size: clamp(80px, 15vw, 140px);
+  font-weight: 900; color: var(--teal-600);
+  line-height: 1; margin-bottom: 12px;
+  opacity: .15;
+}
+.notfound h2 {
+  font-size: clamp(20px, 4vw, 30px);
+  font-weight: 800; color: var(--neutral-800);
+  margin-bottom: 12px;
+}
+.notfound p {
+  font-size: 16px; color: var(--neutral-600);
+  margin-bottom: 32px; max-width: 400px;
+}
