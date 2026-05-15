@@ -68,36 +68,6 @@ function AdminTopbar({ activeTab, onTabChange, userName, onLogout, pendingCount 
             </button>
           ))}
         </nav>
-
-        {/* Right actions */}
-        <div className="ap-topbar-right">
-          <div className="ap-topbar-user" title={userName}>
-            {userName?.slice(0, 1).toUpperCase()}
-          </div>
-          <button
-            className="ap-topbar-logout"
-            onClick={() => navigate('/settings')}
-            title="الإعدادات"
-          >
-            <i className="ti ti-settings" />
-          </button>
-          <button
-            className="ap-topbar-logout"
-            onClick={onLogout}
-            title="تسجيل الخروج"
-          >
-            <i className="ti ti-logout" />
-          </button>
-
-          {/* Hamburger — mobile only */}
-          <button
-            className="ap-hamburger"
-            onClick={() => setMenuOpen(v => !v)}
-            aria-label="القائمة"
-          >
-            <i className={`ti ${menuOpen ? 'ti-x' : 'ti-menu-2'}`} />
-          </button>
-        </div>
       </header>
 
       {/* Mobile drawer */}
