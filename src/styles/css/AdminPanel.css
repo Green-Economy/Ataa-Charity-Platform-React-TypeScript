@@ -93,8 +93,26 @@
   flex: 1;
   overflow-x: auto;
   scrollbar-width: none;
+  /* allow horizontal scroll on tablet without breaking layout */
+  min-width: 0;
+  -webkit-overflow-scrolling: touch;
 }
 .ap-topbar-nav::-webkit-scrollbar { display: none; }
+
+/* Tablet: nav scrolls horizontally, no text labels, icon-only style */
+@media (max-width: 900px) and (min-width: 769px) {
+  .ap-topbar-nav {
+    gap: 1px;
+    flex-shrink: 0;
+    flex: 0 1 auto;
+  }
+  .ap-topbar-link span { display: none; }
+  .ap-topbar-link {
+    padding: 8px 10px;
+    min-width: 38px;
+    justify-content: center;
+  }
+}
 
 .ap-topbar-link {
   display: flex;
@@ -112,6 +130,7 @@
   white-space: nowrap;
   transition: background .15s, color .15s;
   position: relative;
+  flex-shrink: 0;
 }
 .ap-topbar-link:hover {
   background: #f3f4f6;
@@ -1801,18 +1820,25 @@
 }
 
 /* ════════════════════════════════════════════════════════════
+   RESPONSIVE — Small Tablet (≤ 900px): hamburger kicks in
+════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .ap-topbar-nav     { display: none; }
+  .ap-hamburger      { display: flex; }
+  .ap-topbar-brand-title { display: none; }
+  .ap-topbar-brand   { margin-left: 8px; }
+  .ap-topbar-logout  { display: none; }
+  .ap-topbar         { padding: 0 14px; }
+}
+
+/* ════════════════════════════════════════════════════════════
    RESPONSIVE — Mobile  (≤ 768px)
 ════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  /* Hide desktop nav, show hamburger */
-  .ap-topbar-nav { display: none; }
-  .ap-hamburger  { display: flex; }
+  /* (hamburger + nav already handled by 900px rule above) */
 
   /* Topbar */
-  .ap-topbar { padding: 0 14px; }
-  .ap-topbar-brand { margin-left: 10px; }
-  .ap-topbar-brand-title { display: none; }
-  .ap-topbar-logout { display: none; }
+  .ap-topbar { padding: 0 12px; }
 
   /* Main */
   .admin-panel-main { padding: 16px 14px 40px; }
