@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'wouter';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
@@ -7,18 +8,28 @@ interface AppLayoutProps {
   showFooter?: boolean;
 }
 
-/**
- * AppLayout — الـ Layout الموحد لجميع صفحات المنصة
- * يشمل: Navbar ثابت + محتوى الصفحة + Footer
- */
-export default function AppLayout({ children, showFooter = true }: AppLayoutProps) {
+const NO_FOOTER_PATHS = [
+  '/dashboard',
+  '/user-dashboard',
+  '/admin',
+  '/settings',
+  '/notifications',
+];
+export default function AppLayout({ children, showFooter }: AppLayoutProps) {
+  const [location] = useLocation();
+
+  const shouldShowFooter =
+    showFooter !== undefined
+      ? showFooter
+      : !NO_FOOTER_PATHS.some(p => location === p || location.startsWith(p + '/'));
+
   return (
     <>
       <Navbar />
       <main className="main-content">
         {children}
       </main>
-      {showFooter && <Footer />}
+      {shouldShowFooter && <Footer />}
     </>
   );
 }

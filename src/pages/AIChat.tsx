@@ -19,12 +19,19 @@ interface PendingImage {
 const SESSION_KEY = 'ataa_chat_messages';
 const MAX_IMAGES = 5;
 
-const SIDEBAR_LINKS = [
-  { href: '/',               icon: 'ti-home',        label: 'الرئيسية'    },
-  { href: '/charities',      icon: 'ti-heart',       label: 'الجمعيات'    },
-  { href: '/user-dashboard', icon: 'ti-layout-grid', label: 'لوحة التحكم' },
-  { href: '/settings',       icon: 'ti-settings',    label: 'الإعدادات'   },
+const BASE_SIDEBAR_LINKS = [
+  { href: '/',          icon: 'ti-home',   label: 'الرئيسية' },
+  { href: '/charities', icon: 'ti-heart',  label: 'الجمعيات' },
+  { href: '/settings',  icon: 'ti-settings', label: 'الإعدادات' },
 ];
+
+function getRoleSidebarLink(roleType?: string) {
+  if (roleType === 'admin')   return { href: '/admin',          icon: 'ti-shield-lock',  label: 'لوحة الإدارة' };
+  if (roleType === 'charity') return { href: '/dashboard',      icon: 'ti-layout-grid',  label: 'لوحة الجمعية' };
+  if (roleType === 'user')    return { href: '/user-dashboard',  icon: 'ti-layout-grid',  label: 'تبرعاتي'       };
+  if (roleType === 'donor')   return { href: '/user-dashboard',  icon: 'ti-layout-grid',  label: 'حسابي'         };
+  return null;
+}
 
 const SUGGESTION_CARDS = [
   { icon: 'ti-shirt',         title: 'الملابس المقبولة للتبرع',  sub: 'ما هي أنواع الملابس المناسبة؟'  },
@@ -61,6 +68,10 @@ export default function AIChat() {
 
   const [location, setLocation] = useLocation();
   const { user } = useAuth();
+  const roleSidebarLink = getRoleSidebarLink(user?.roleType);
+  const sidebarLinks = roleSidebarLink
+    ? [BASE_SIDEBAR_LINKS[0], roleSidebarLink, ...BASE_SIDEBAR_LINKS.slice(1)]
+    : BASE_SIDEBAR_LINKS;
 
   const userInitial = user?.userName?.[0]?.toUpperCase()
                    || user?.name?.[0]?.toUpperCase()
@@ -272,7 +283,7 @@ export default function AIChat() {
 
           <nav className="ac-sb-nav">
             <div className="ac-sb-section">التنقل</div>
-            {SIDEBAR_LINKS.map(link => (
+            {sidebarLinks.map(link => (
               <button
                 key={link.href}
                 className={`ac-nav-link${location === link.href ? ' active' : ''}`}
